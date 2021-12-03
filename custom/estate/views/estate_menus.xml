@@ -7,7 +7,8 @@
                 </menuitem>
             </menuitem>
             <menuitem id="test_menu_root_2" name="Settings">
-                <menuitem id="test_model_menu_action_2" name="Property Types" action="estate_property_type_action"/>
+                <menuitem id="estate_property_type_menu_action" name="Property Types" action="estate_property_type_action"/>
+                <menuitem id="estate_property_tag_menu_action" name="Property Tags" action="estate_property_tag_action"/>
             </menuitem>
             <menuitem id="test_menu_root_3" name="Partners">
                 <menuitem id="test_model_menu_action_3" name="Partners" action="res_partner_action"/>

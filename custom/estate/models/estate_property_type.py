@@ -1,6 +1,4 @@
 from odoo import fields, models
-import datetime
-from dateutil.relativedelta import relativedelta
 
 class EstatePropertyType(models.Model):
     _name = "estate.property.type"
