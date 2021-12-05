@@ -1,6 +1,7 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, exceptions
 import datetime
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import ValidationError
 
 
 class EstateProperty(models.Model):
@@ -48,6 +49,21 @@ class EstateProperty(models.Model):
     total_area = fields.Float(compute="_compute_total_area")
     best_offer_price = fields.Float(compute="_compute_best_offer_price")
 
+    _sql_constraints = [
+        ('check_expected_price', 'CHECK(expected_price >= 0)','The expected price must be positive.'),
+        ('check_selling_price', 'CHECK(selling_price>=0)', 'The selling price must be postive.'),
+    ]
+
+
+    @api.constrains("selling_price")#the selling price cannot be lower than 90% of the expected price.
+    def _check_selling_price(self):
+        for record in self:
+            offers = record.property_offer_ids
+            for offer in offers:
+                selling = offer.price
+                expected = record.expected_price
+                if (selling < 0.9 * expected):
+                    raise ValidationError("The selling price must be higher than the 90 percent of the expected price")
 
 
     @api.depends("living_area", "garden_area")
@@ -85,6 +101,24 @@ class EstateProperty(models.Model):
             return {'warning': {
                 'title': ("Info"),
                 'message': ('It would unset or clear the fields Are and Orientation')}}
+
+    def action_sold_estate(self):
+        for record in self:
+            if record.estate == "canceled":
+                raise exceptions.UserError("Canceled properties can't be sold")
+            else:
+                record.estate = "sold"
+        return True
+
+
+    def action_cancel_estate(self):
+        for record in self:
+            if record.estate == "sold":
+                raise exceptions.UserError("Sold properties can't be canceled")
+            else:
+                record.estate = "canceled"
+        return True
+
 
 
     def action_estate_property(self):

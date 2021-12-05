@@ -6,6 +6,9 @@ class EstatePropertyType(models.Model):
     
     name = fields.Char(required=True)
 
+    _sql_constraints = [
+        ('check_name_uniq', 'UNIQUE(name)', 'The name must be unique.')
+    ]
 
     def action_estate_property_type(self):
         return {

@@ -8,11 +8,13 @@
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
             <tree string="Properties"> 
-                <field name="price"></field>
-                <field name="status"></field>
+                <field name="price"/>
                 <field name="validity"/>
-                <field name="date_deadline"/>
-                <field name="customer_id"></field>
+                <field name="date_deadline" string="Date Deadline"/>
+                <field name="customer_id"/>
+                <field name="status"/>
+                <button name="action_confirm_status" string="Confirm" type="object" icon="fa-check"/>
+                <button name="action_cancel_status" string="Cancel" type="object" icon="fa-times"/>
             </tree>
         </field>
     </record>
@@ -24,13 +26,14 @@
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
             <form string="Estate Property Type">
+            <header>
+              <button type="action" name="%(estate_property_action)d" string="Volver (prueba boton type=action"/>
+            </header> 
               <div class="oe_button_box" name="button_box">
                 <button name="action_estate_property_offer" type="object"
                             class="oe_stat_button" icon="fa-star">
                 </button>
               </div>
-
-                <sheet>
                 <group>
                         <field name="price"></field>
                         <field name="status"></field>
@@ -38,7 +41,6 @@
                         <field name="date_deadline"/>
                         <field name="customer_id"></field>
                 </group>
-                </sheet>
             </form>
         </field>
     </record>

@@ -1,6 +1,7 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, exceptions
 import datetime
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import ValidationError
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
@@ -19,6 +20,12 @@ class EstatePropertyOffer(models.Model):
     validity = fields.Integer()
     date_deadline = fields.Date(compute="_compute_date", inverse="_inverse_date", default=datetime.date.today())
 
+
+    _sql_constraints = [
+        ('check_price', 'CHECK(price >= 0)', 'The price of the offer must be positive.')
+    ]
+
+
     @api.depends("validity")
     def _compute_date(self):
         hoy = datetime.date.today()
@@ -32,7 +39,35 @@ class EstatePropertyOffer(models.Model):
             validity = record.date_deadline - hoy
             record.validity = validity.days
 
+    def action_confirm_status(self):
+        for record in self:
+            lista_offer = record.estate_property_id.property_offer_ids
+            #print("Lista Offer:" + str(lista_offer))
+            for offer in lista_offer:
 
+                #print(str(offer.price)+"---"+str(offer.status))
+
+                if (offer.status == "accepted") & (record != offer):
+                    raise exceptions.UserError("There is already one offer accepted. First, refuse it and then accept another one.")
+                else: 
+                    record.status = "accepted"
+                    record.estate_property_id.selling_price = record.price
+                    record.estate_property_id.partner_id = record.customer_id
+        return True
+
+    def action_cancel_status(self):#tengo que ver que todos esten a refused para poner el selling price a 0 y poner el partner a None
+        uno_aceptado = False
+        for record in self:
+            record.status = "refused"
+            lista_offer = record.estate_property_id.property_offer_ids
+            for offer in lista_offer:
+                if not uno_aceptado:
+                    if (offer.status == "accepted"):
+                        uno_aceptado = True
+            if not uno_aceptado: 
+                record.estate_property_id.selling_price = 0
+                record.estate_property_id.partner_id = None
+        return True
 
     def action_estate_property_offer(self):
         return {
