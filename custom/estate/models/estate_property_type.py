@@ -3,8 +3,10 @@ from odoo import fields, models
 class EstatePropertyType(models.Model):
     _name = "estate.property.type"
     _description = "Estate property type"
+    _order = "name"
     
     name = fields.Char(required=True)
+    property_ids = fields.One2many("estate.property", "property_type_id")
 
     _sql_constraints = [
         ('check_name_uniq', 'UNIQUE(name)', 'The name must be unique.')
@@ -18,3 +20,4 @@ class EstatePropertyType(models.Model):
             'type': 'ir.actions.act_window',
 
         }
+

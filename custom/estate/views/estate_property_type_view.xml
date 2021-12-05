@@ -26,9 +26,18 @@
               </div>
 
                 <sheet>
-                    <group>
-                        <h2>Name: <field name="name"/></h2>
-                    </group>
+                        <h1><field name="name"/></h1>
+                    <notebook>
+                      <page string="Properties">
+                        <field name="property_ids">
+                          <tree>
+                            <field name="name" string="Title"/>
+                            <field name="expected_price"/>
+                            <field name="estate" string="Status"/>
+                          </tree>
+                        </field>
+                      </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

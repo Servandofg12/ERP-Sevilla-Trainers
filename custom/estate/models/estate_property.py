@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Estate property test"
+    _order = "id desc"
     
     name = fields.Char(default="Unknown", required=True)
     description = fields.Text("Description")
@@ -43,7 +44,7 @@ class EstateProperty(models.Model):
     property_tag_ids = fields.Many2many("estate.property.tag", string="Tag")#muchos ESTATE.PROPERTY pueden tener uno o más TAG
 
     #One2Many
-    property_offer_ids = fields.One2many("estate.property.offer", "estate_property_id")
+    property_offer_ids = fields.One2many("estate.property.offer", "estate_property_id", ondelete="set null")
 
     #Computed fields
     total_area = fields.Float(compute="_compute_total_area")
@@ -55,15 +56,45 @@ class EstateProperty(models.Model):
     ]
 
 
-    @api.constrains("selling_price")#the selling price cannot be lower than 90% of the expected price.
+    @api.constrains("expected_price","selling_price")#the selling price cannot be lower than 90% of the expected price.
     def _check_selling_price(self):
+        print("ENTRA AQUIII")
+        for record in self:
+            selling = record.selling_price
+            print("SELLING: " + str(selling))
+            expected = record.expected_price
+            result = selling < 0.9 * expected
+            print(result)
+            if selling > 0:
+                if result: 
+                    raise ValidationError("The selling price must be higher than the 90 percent of the expected price")
+                else:
+                    return False
+            else:
+                if result:
+                    raise ValidationError("That property is already with a selling price")
+            '''print("SELLING: " + str(record.selling_price))
+            offers = record.property_offer_ids#es una lista, no puedo coger directamente el record.selling_price porque es 0 hasta que se updatea confirmando
+            print("OFFER 1: " + str(offers[0].estate_property_id.selling_price))
+            for offer in offers:
+                selling = offer.price
+                print("PRICE: " + str(selling))
+                expected = record.expected_price
+                result = selling < 0.9 * expected
+                print("RESULTADO: " + str(result))
+                if result:
+                    raise ValidationError("The selling price must be higher than the 90 percent of the expected price")
+                else:
+                    offer.status = "accepted"
         for record in self:
             offers = record.property_offer_ids
             for offer in offers:
                 selling = offer.price
+                print(selling)
                 expected = record.expected_price
+                print(selling < 0.9 * expected)
                 if (selling < 0.9 * expected):
-                    raise ValidationError("The selling price must be higher than the 90 percent of the expected price")
+                    raise ValidationError("The selling price must be higher than the 90 percent of the expected price")'''
 
 
     @api.depends("living_area", "garden_area")
@@ -129,8 +160,4 @@ class EstateProperty(models.Model):
             'type': 'ir.actions.act_window',
 
         }
-
-
-
-
 

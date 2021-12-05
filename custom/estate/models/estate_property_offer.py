@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
     _description = "Estate property offer"
+    _order = "price desc"
     
     price = fields.Float()
     status = fields.Selection(
@@ -24,7 +25,6 @@ class EstatePropertyOffer(models.Model):
     _sql_constraints = [
         ('check_price', 'CHECK(price >= 0)', 'The price of the offer must be positive.')
     ]
-
 
     @api.depends("validity")
     def _compute_date(self):
