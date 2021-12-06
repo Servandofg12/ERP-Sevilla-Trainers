@@ -7,14 +7,14 @@
         <field name="name">estate.property.offer.tree</field>
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
-            <tree string="Properties"> 
+            <tree string="Properties" editable="bottom" decoration-danger="status == 'refused'" decoration-success="status == 'accepted'"> 
                 <field name="price"/>
                 <field name="validity"/>
                 <field name="date_deadline" string="Date Deadline"/>
                 <field name="customer_id"/>
-                <field name="status"/>
-                <button name="action_confirm_status" string="Confirm" type="object" icon="fa-check"/>
-                <button name="action_cancel_status" string="Cancel" type="object" icon="fa-times"/>
+                <button name="action_confirm_status" string="Confirm" type="object" icon="fa-check" attrs="{'invisible': [('status', '!=', False)]}"/>
+                <button name="action_cancel_status" string="Cancel" type="object" icon="fa-times" attrs="{'invisible': [('status', '!=', False)]}"/>
+                <field name="status" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -45,5 +45,12 @@
         </field>
     </record>
 
+    <!-- Para que aparezca el boton en el menu-->
+    <record id="estate_property_offer_action" model="ir.actions.act_window"><!-- el id que pongamos aqui servirá para llamarlo en el estate_menus-->
+      <field name="name">Estate Property offer</field>
+      <field name="res_model">estate.property.offer</field>
+      <field name="domain">[('estate_property_type_id','=', active_id)]</field>
+      <field name="view_mode">tree,form</field>
+    </record>
 
   </odoo>

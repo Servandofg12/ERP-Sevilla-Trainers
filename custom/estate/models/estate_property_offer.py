@@ -17,6 +17,7 @@ class EstatePropertyOffer(models.Model):
     )
     customer_id = fields.Many2one('res.partner', string='Customer', index=True, tracking=10)
     estate_property_id = fields.Many2one("estate.property", string="Property")
+    estate_property_type_id = fields.Many2one("estate.property.type", related="estate_property_id.property_type_id", store=True)#asi cogemos la tabla de type
 
     validity = fields.Integer()
     date_deadline = fields.Date(compute="_compute_date", inverse="_inverse_date", default=datetime.date.today())
@@ -50,9 +51,15 @@ class EstatePropertyOffer(models.Model):
                 if (offer.status == "accepted") & (record != offer):
                     raise exceptions.UserError("There is already one offer accepted. First, refuse it and then accept another one.")
                 else: 
-                    record.status = "accepted"
-                    record.estate_property_id.selling_price = record.price
-                    record.estate_property_id.partner_id = record.customer_id
+                    print(offer.price)
+                    print(record.estate_property_id.state != "offer aceppted")
+                    if record.estate_property_id.state != "sold":
+                        record.status = "accepted"
+                        record.estate_property_id.selling_price = record.price
+                        record.estate_property_id.partner_id = record.customer_id
+                        record.estate_property_id.state = "offer aceppted"
+                    else:
+                        raise exceptions.UserError("The property is already sold.")
         return True
 
     def action_cancel_status(self):#tengo que ver que todos esten a refused para poner el selling price a 0 y poner el partner a None
@@ -64,9 +71,16 @@ class EstatePropertyOffer(models.Model):
                 if not uno_aceptado:
                     if (offer.status == "accepted"):
                         uno_aceptado = True
-            if not uno_aceptado: 
+            print(record.estate_property_id.state!="sold")
+            print(not uno_aceptado)
+            if not uno_aceptado & (record.estate_property_id.state!="sold"): 
                 record.estate_property_id.selling_price = 0
                 record.estate_property_id.partner_id = None
+            else:
+                if uno_aceptado & (record.estate_property_id.state!="sold"):
+                    return True
+                else:
+                    raise exceptions.UserError("The property is already sold.")
         return True
 
     def action_estate_property_offer(self):

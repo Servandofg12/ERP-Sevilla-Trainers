@@ -26,19 +26,20 @@ class EstateProperty(models.Model):
         selection=[('north', 'North'), ('south','South'), ('east','East'), ('west','West')],
         help = "Type is used to separate"
         )
-    estate = fields.Selection(
+    state = fields.Selection(
         copy = False,
         required = True,
         default = "new",
-        string='Type estate',
+        string='Type state',
         selection=[('new', 'New'), ('offer received','Offer Received,'), ('offer aceppted','Offer Accepted',), ('sold','Sold'), ('canceled', 'Canceled')],
         help = "Type is used to separate"
         )
+    active = fields.Boolean("Active", default=True)
     
     #Many2One
     property_type_id = fields.Many2one("estate.property.type", string="Type")#muchos ESTATE.PROPERTY pueden tener un unico TYPE
-    user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user, readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', index=True, tracking=10)
+    user_id = fields.Many2one('res.users', string='Salesperson', index=True, default=lambda self: self.env.user, readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', index=True)
 
     #Many2Many
     property_tag_ids = fields.Many2many("estate.property.tag", string="Tag")#muchos ESTATE.PROPERTY pueden tener uno o más TAG
@@ -50,6 +51,7 @@ class EstateProperty(models.Model):
     total_area = fields.Float(compute="_compute_total_area")
     best_offer_price = fields.Float(compute="_compute_best_offer_price")
 
+    #Constraints
     _sql_constraints = [
         ('check_expected_price', 'CHECK(expected_price >= 0)','The expected price must be positive.'),
         ('check_selling_price', 'CHECK(selling_price>=0)', 'The selling price must be postive.'),
@@ -58,43 +60,20 @@ class EstateProperty(models.Model):
 
     @api.constrains("expected_price","selling_price")#the selling price cannot be lower than 90% of the expected price.
     def _check_selling_price(self):
-        print("ENTRA AQUIII")
+        #print("ENTRA AQUIII")
         for record in self:
             selling = record.selling_price
-            print("SELLING: " + str(selling))
+            #print("SELLING: " + str(selling))
             expected = record.expected_price
+            #print("EXPECTED:" + str(expected))
             result = selling < 0.9 * expected
-            print(result)
+            #print(result)
             if selling > 0:
                 if result: 
                     raise ValidationError("The selling price must be higher than the 90 percent of the expected price")
                 else:
                     return False
-            else:
-                if result:
-                    raise ValidationError("That property is already with a selling price")
-            '''print("SELLING: " + str(record.selling_price))
-            offers = record.property_offer_ids#es una lista, no puedo coger directamente el record.selling_price porque es 0 hasta que se updatea confirmando
-            print("OFFER 1: " + str(offers[0].estate_property_id.selling_price))
-            for offer in offers:
-                selling = offer.price
-                print("PRICE: " + str(selling))
-                expected = record.expected_price
-                result = selling < 0.9 * expected
-                print("RESULTADO: " + str(result))
-                if result:
-                    raise ValidationError("The selling price must be higher than the 90 percent of the expected price")
-                else:
-                    offer.status = "accepted"
-        for record in self:
-            offers = record.property_offer_ids
-            for offer in offers:
-                selling = offer.price
-                print(selling)
-                expected = record.expected_price
-                print(selling < 0.9 * expected)
-                if (selling < 0.9 * expected):
-                    raise ValidationError("The selling price must be higher than the 90 percent of the expected price")'''
+
 
 
     @api.depends("living_area", "garden_area")
@@ -135,19 +114,19 @@ class EstateProperty(models.Model):
 
     def action_sold_estate(self):
         for record in self:
-            if record.estate == "canceled":
+            if record.state == "canceled":
                 raise exceptions.UserError("Canceled properties can't be sold")
             else:
-                record.estate = "sold"
+                record.state = "sold"
         return True
 
 
     def action_cancel_estate(self):
         for record in self:
-            if record.estate == "sold":
+            if record.state == "sold":
                 raise exceptions.UserError("Sold properties can't be canceled")
             else:
-                record.estate = "canceled"
+                record.state = "canceled"
         return True
 
 
