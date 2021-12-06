@@ -112,6 +112,16 @@ class EstateProperty(models.Model):
                 'title': ("Info"),
                 'message': ('It would unset or clear the fields Are and Orientation')}}
 
+
+    def unlink(self):
+        for record in self:
+            if record.state=="new" or (record.state=="canceled"):
+                return super().unlink()
+            else:
+                raise exceptions.UserError("Only new and canceled properties can be deleted.")
+        return super().unlink()
+
+
     def action_sold_estate(self):
         for record in self:
             if record.state == "canceled":

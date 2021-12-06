@@ -2,6 +2,7 @@ from odoo import api, fields, models, exceptions
 import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError
+from odoo.tools import float_compare
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
@@ -39,6 +40,20 @@ class EstatePropertyOffer(models.Model):
         for record in self:
             validity = record.date_deadline - hoy
             record.validity = validity.days
+
+
+    @api.model
+    def create(self, vals):
+        if vals.get("estate_property_id") and vals.get("price"):
+            prop = self.env["estate.property"].browse(vals["estate_property_id"])
+            # We check if the offer is higher than the existing offers
+            if prop.property_offer_ids:
+                max_offer = max(prop.mapped("property_offer_ids.price"))
+                if float_compare(vals["price"], max_offer, precision_rounding=0.01) <= 0:
+                    raise exceptions.UserError("The offer must be higher than %.2f" % max_offer)
+            prop.state = "offer received"
+        return super().create(vals)
+    
 
     def action_confirm_status(self):
         for record in self:
