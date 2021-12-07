@@ -1,7 +1,8 @@
 {
-    'name': "Ejemplo",
+    'name': "Estate Account",
     'version': '1.0',
-    'depends': ['base'],
+    'depends': ['base', "account"],
+    "auto_install": True,
     'author': "SeRv_128",
     'category': 'App',
     'description': """
