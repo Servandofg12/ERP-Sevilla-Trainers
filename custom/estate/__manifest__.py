@@ -1,7 +1,7 @@
 {
     'name': "Estate",
     'version': '1.0',
-    'depends': ['base'],
+    'depends': ['base',"web",],
     'author': "SeRv_128",
     'category': 'App',
     'description': """
@@ -16,6 +16,7 @@
         'views/estate_res_partner.xml',
         'views/res_user_view.xml',
         'views/estate_menus.xml'
-        ]
+        ],
+    "license":"serv128",
 }
 

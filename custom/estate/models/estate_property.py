@@ -45,7 +45,7 @@ class EstateProperty(models.Model):
     property_tag_ids = fields.Many2many("estate.property.tag", string="Tag")#muchos ESTATE.PROPERTY pueden tener uno o más TAG
 
     #One2Many
-    property_offer_ids = fields.One2many("estate.property.offer", "estate_property_id", ondelete="set null")
+    property_offer_ids = fields.One2many("estate.property.offer", "estate_property_id")
 
     #Computed fields
     total_area = fields.Float(compute="_compute_total_area")

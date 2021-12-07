@@ -7,5 +7,6 @@
     'category': 'App',
     'description': """
     My second module
-    """
+    """,
+    "license":"serv128",
 }

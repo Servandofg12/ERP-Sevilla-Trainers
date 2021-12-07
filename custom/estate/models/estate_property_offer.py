@@ -16,7 +16,7 @@ class EstatePropertyOffer(models.Model):
         help = "Type is used to separate",
         copy=False
     )
-    customer_id = fields.Many2one('res.partner', string='Customer', index=True, tracking=10)
+    customer_id = fields.Many2one('res.partner', string='Customer', index=True)
     estate_property_id = fields.Many2one("estate.property", string="Property")
     estate_property_type_id = fields.Many2one("estate.property.type", related="estate_property_id.property_type_id", store=True)#asi cogemos la tabla de type
 
