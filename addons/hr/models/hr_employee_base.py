@@ -56,6 +56,7 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
     employee_type = fields.Selection([
         ('employee', 'Employee'),
+        ('trainer', 'Trainer'),
         ('student', 'Student'),
         ('trainee', 'Trainee'),
         ('contractor', 'Contractor'),

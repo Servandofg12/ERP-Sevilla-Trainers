@@ -17,6 +17,6 @@
         'views/res_user_view.xml',
         'views/estate_menus.xml'
         ],
-    "license":"serv128",
+    "license":"LGPL-3",
 }
 

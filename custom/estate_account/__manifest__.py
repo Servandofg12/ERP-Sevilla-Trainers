@@ -8,5 +8,5 @@
     'description': """
     My second module
     """,
-    "license":"serv128",
+    "license":"LGPL-3",
 }
