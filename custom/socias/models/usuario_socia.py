@@ -1,5 +1,6 @@
 from odoo import api, fields, models, exceptions
 import datetime
+import re
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError
 
@@ -13,8 +14,8 @@ class UsuarioSocia(models.Model):#retocar el security
     name = fields.Char(required=True)
     surnames = fields.Char(required=True)#validar bien
     birth_date = fields.Date(required=True)#validar bien
-    peso_actual = fields.Float(required=True)#no peso negativa
-    altura_actual = fields.Float(required=True)#no altura negativa
+    peso_actual = fields.Float(required=True)
+    altura_actual = fields.Float(required=True)
     dada_alta = fields.Boolean(default=True)
     fecha_de_alta = fields.Date(default=datetime.date.today())
     fecha_de_baja = fields.Date()
@@ -33,12 +34,58 @@ class UsuarioSocia(models.Model):#retocar el security
     coste_pase = fields.Float(compute="_compute_coste_tipo_pase")
 
 
-    #Constraints
+    #Constraints---------------------------------------------------------------------------------------------------------------------------
     _sql_constraints = [
         ('check_peso_actual', 'CHECK(peso_actual > 0)', 'El peso debe ser positivo y mayor que 0.'),
         ('check_altura_actual', 'CHECK(altura_actual > 0)', 'La altura debe ser positiva y mayor que 0.'),
         ('user_uniq', 'unique (user_id)', "Un usuario no puede pertenecer a dos socias.")
     ]
+
+    @api.constrains("name")
+    def _check_name(self):
+        for record in self:
+            name = record.name
+
+            if name[0] != name[0].upper():
+                raise ValidationError("El nombre debe empezar por mayúsculas.")
+
+            primera = True
+            for letra in name:
+                if re.match("[0-9]", letra):
+                    raise ValidationError("El nombre no debe contener números.")
+                
+                if letra == letra.upper():
+                    if (not primera):
+                        raise ValidationError("El nombre debe tener solo la primera letra en mayúsculas.")
+                primera = False
+                
+
+    @api.constrains("surnames")#queda mejorar esta restriccion
+    def _check_surnames(self):
+        for record in self:
+            apellidos = record.surnames
+
+            trozos_apellidos = apellidos.split(" ")
+            primera = True
+            for trozo in trozos_apellidos:
+                if trozo[0] != trozo[0].upper():
+                    raise ValidationError("Los apellidos deben empezar por mayúsculas.")
+
+                if re.match("[0-9]", trozo):
+                    raise ValidationError("Los apellidos no deben contener números.")
+        
+                if trozo == trozo.upper():
+                    if (not primera):
+                        raise ValidationError("Los apellidos debe tener solo la primera letra en mayúsculas.")
+                primera = False
+
+
+    @api.constrains("user_id")
+    def _check_name_and_surnames(self):
+        for record in self:
+            usuarios = record.user_id.socia_ids
+            for usuario in usuarios:
+                print(usuario)
 
 
     #Computed fields functions-------------------------------------------------------------------------------------------------------------
@@ -68,22 +115,18 @@ class UsuarioSocia(models.Model):#retocar el security
 
     @api.depends("edad")
     def _compute_tipo_de_pase_segun_edad(self):
-        print("COMPUTEE TIPO PASEEEEE")
         for record in self:
             edad = record.edad
             record.tipo_pase_temporada = "normal"
 
             if edad <= 21:
                 record.tipo_pase_temporada = "estudiante"
-                print(record.tipo_pase_temporada)
 
             elif edad <= 59:
                 record.tipo_pase_temporada = "normal"
-                print(record.tipo_pase_temporada)
 
             else:
                 record.tipo_pase_temporada = "tercera_edad"
-                print(record.tipo_pase_temporada)
 
 
 
