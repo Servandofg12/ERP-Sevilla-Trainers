@@ -221,6 +221,7 @@
                     <field name="share" invisible="1"/>
                     <field name="employee_ids" invisible="1"/>
                     <field name="employee_id" invisible="1"/>
+                    <!-- BOTON DE CREAR EMPLEADo-->
                     <button string="Create employee"
                             type="object" name="action_create_employee"
                             attrs="{'invisible': ['|', '|', ('id', '=', False), ('share', '=', True), ('employee_id', '!=', False)]}"/>
