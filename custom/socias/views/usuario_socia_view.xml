@@ -29,6 +29,7 @@
                 <!-- Aquí van botones de dar de alta y baja-->
 
               </header>
+
               <!-- 
               <div class="oe_button_box" name="button_box">
                 <button name="action_estate_property" type="object"
@@ -42,12 +43,11 @@
                         <group>
                             <field name="name" string="Nombre"/>
                             <field name="surnames" string="Apellidos"/>
-                            <field name="birth_date" string="Fecha de Nacimiento"/>
-                            <field name="tipo_pase_temporada" string="Tipo de Pase"/>
                         </group>
                         <group>
                             <field name="edad" string="Edad"/>
                             <field name="coste_pase" string="Coste del Pase"/>
+                            <field name="dia_de_pago" string="Próximo día de Pago"/>
                         </group>
                     </group>
                     <group>
@@ -63,6 +63,28 @@
                                 <field name="user_id" string="Usuario a usar en la aplicación" widget="many2one" options="{'no_create': False}"/>
                               </group>
                             </page2 >
+                            <page3 string="Datos personales y de contacto">
+                              <group>
+                                <group>
+                                  <field name="tiene_dni" string="¿Tiene DNI?"/>
+                                  <field name="dni" string="DNI" attrs="{'invisible':[('tiene_dni', '==', False)]}"/>
+                                  <field name="nie" string="NIE" attrs="{'invisible':[('tiene_dni', '==', True)]}"/>
+                                </group>
+                                <group>
+                                  <field name="correo" string="Correo electrónico"/>
+                                  <field name="telefono" string="Número de teléfono"/>
+                                  <field name="direccion" string="Dirección"/>
+                                  <field name="objetivo" string="Objetivo"/>
+                                </group>
+                              </group>
+                            </page3>
+                            <page4 string="Forma de Pago y Tipo de Pase">
+                              <group>
+                                <field name="formas_de_pago" string="Formas de Pago"/>
+                                <field name="birth_date" string="Fecha de Nacimiento"/>
+                                <field name="tipo_pase_temporada" string="Tipo de Pase"/>
+                              </group>
+                            </page4>
                         </notebook>
                     </group>
                 </sheet>
@@ -123,7 +145,7 @@
 
 
   <!-- Para que aparezca el boton en el menu-->
-    <record id="usuario_socia_action" model="ir.actions.act_window"><!-- el id que pongamos aqui servirá para llamarlo en el estate_menus-->
+    <record id="usuario_socia_action" model="ir.actions.act_window"><!-- el id que pongamos aqui servirá para llamarlo en el usuario_socia_menu-->
       <field name="name">Socias</field>
       <field name="res_model">usuario.socia</field>
       <field name="view_mode">kanban,tree,form</field>
