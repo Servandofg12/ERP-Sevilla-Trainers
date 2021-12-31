@@ -55,6 +55,7 @@ class UsuarioSocia(models.Model):#retocar el security
         ('check_altura_actual', 'CHECK(altura_actual > 0)', 'La altura debe ser positiva y mayor que 0.'),
         ('user_uniq', 'unique (user_id)', "Un usuario no puede pertenecer a dos socias."),
         ('dni_uniq', 'unique (dni)', "Ese DNI ya pertenece a alguien."),
+        ('nie_uniq', 'unique (nie)', "Ese NIE ya pertenece a alguien."),
         ('unique_email', 'unique (correo)', 'El correo ya existe.'),
     ]
 
