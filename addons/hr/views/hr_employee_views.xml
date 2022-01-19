@@ -46,11 +46,16 @@
                     <field name="user_partner_id" invisible="1"/>
                     <field name="hr_presence_state" invisible="1"/>
                     <field name="image_128" invisible="1" />
-                    <!-- <header>
-                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_manager"/>
-                    </header> -->
+                    <header>
+                        <!-- <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_manager"/> -->
+
+                        <!-- Botones de dar de alta y de baja -->
+                        <field name="dada_alta" invisible="True"/>
+                        <button name="action_dar_de_alta" type="object" string="Dar de alta" attrs="{'invisible':[('dada_alta', '==', True)]}"/>
+                        <button name="action_dar_de_baja" type="object" string="Dar de baja" attrs="{'invisible':[('dada_alta', '==', False)]}"/>
+                    </header> 
                     <sheet>
-                        <div name="button_box" class="oe_button_box">
+                        <!--<div name="button_box" class="oe_button_box">
                             <button
                                 id="hr_presence_button"
                                 class="oe_stat_button"
@@ -75,7 +80,7 @@
                                     <span class="o_stat_text">Present Since</span>
                                 </div>
                             </button>
-                        </div>
+                        </div>-->
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="avatar_128" invisible="1"/>
                         <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
@@ -97,6 +102,11 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="company_country_id" invisible="1"/>
                                 <field name="company_country_code" invisible="1"/> 
+                            </group>
+                            <group>
+                                <!--<field name="dada_alta" string="¿Dada de alta?" readonly="True"/>-->
+                                <field name="fecha_de_alta" string="Dada de alta en" readonly="True"/>
+                                <field name="fecha_de_baja" string="Dada de baja en" readonly="True"/>
                             </group>
                             <!-- <group>
                                 <field name="department_id"/>

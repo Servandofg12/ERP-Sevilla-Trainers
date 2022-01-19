@@ -25,7 +25,7 @@
 
               <header>
                 <!-- Aquí van botones de dar de alta y baja-->
-                <field name="dada_alta"/>
+                <field name="dada_alta" invisible="True"/>
                 <button name="action_dar_de_alta" type="object" string="Dar de alta" attrs="{'invisible':[('dada_alta', '==', True)]}"/>
                 <button name="action_dar_de_baja" type="object" string="Dar de baja" attrs="{'invisible':[('dada_alta', '==', False)]}"/>
               </header>

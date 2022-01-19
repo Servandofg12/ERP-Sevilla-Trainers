@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
-from datetime import datetime, time
+from datetime import datetime, time, date
 from dateutil.rrule import rrule, DAILY
 from random import choice
 from string import digits
@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, exceptions, _
 from odoo.osv.query import Query
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.osv import expression
@@ -30,6 +30,14 @@ class HrEmployeePrivate(models.Model):
     _order = 'name'
     _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
+
+    #Atributos añadidos por mi ---------------------------------------------------------------------------------------------------------
+
+    dada_alta = fields.Boolean(default=True, groups="hr.group_hr_user")
+    fecha_de_alta = fields.Date(default=date.today(), groups="hr.group_hr_user")
+    fecha_de_baja = fields.Date(groups="hr.group_hr_user")
+
+    #-----------------------------------------------------------------------------------------------------------------------------------
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
@@ -463,4 +471,26 @@ class HrEmployeePrivate(models.Model):
 
     def _sms_get_number_fields(self):
         return ['mobile_phone']
+
+    
+    #My Actions-------------------------------------------------------------------------------------------------------------
+
+    def action_dar_de_alta(self):
+        for record in self:
+            if record.dada_alta == True:
+                raise exceptions.UserError("Ya está dada de alta")
+            else:
+                record.dada_alta = True
+                record.fecha_de_alta = date.today()
+                record.fecha_de_baja = None
+        return True
+
+    def action_dar_de_baja(self):
+        for record in self:
+            if record.dada_alta == False:
+                raise exceptions.UserError("Ya está dada de baja")
+            else:
+                record.dada_alta = False
+                record.fecha_de_baja = date.today()
+        return True
 
