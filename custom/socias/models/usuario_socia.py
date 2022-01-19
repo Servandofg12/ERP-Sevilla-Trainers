@@ -121,7 +121,7 @@ class UsuarioSocia(models.Model):#retocar el security
 
 
     #Computed fields functions-------------------------------------------------------------------------------------------------------------
-    @api.depends("birth_date")
+    @api.depends("birth_date", "edad")
     def _compute_edad(self):
         for record in self:
             fecha_nacimiento = record.birth_date
@@ -175,7 +175,7 @@ class UsuarioSocia(models.Model):#retocar el security
 
 
     @api.depends("tipo_pase_temporada", "formas_de_pago")
-    def _compute_coste_tipo_pase(self):#hay que añadirle el metodo de pago y comparar bien aqui
+    def _compute_coste_tipo_pase(self):
         for record in self:
             tipo_pase = record.tipo_pase_temporada
             forma_pago = record.formas_de_pago
@@ -206,6 +206,28 @@ class UsuarioSocia(models.Model):#retocar el security
             
             else:
                 record.coste_pase = 0.0
+
+
+    #Actions-------------------------------------------------------------------------------------------------------------
+
+    def action_dar_de_alta(self):
+        for record in self:
+            if record.dada_alta == True:
+                raise exceptions.UserError("Ya está dada de alta")
+            else:
+                record.dada_alta = True
+                record.fecha_de_alta = datetime.date.today()
+                record.fecha_de_baja = None
+        return True
+
+    def action_dar_de_baja(self):
+        for record in self:
+            if record.dada_alta == False:
+                raise exceptions.UserError("Ya está dada de baja")
+            else:
+                record.dada_alta = False
+                record.fecha_de_baja = datetime.date.today()
+        return True
 
     
 

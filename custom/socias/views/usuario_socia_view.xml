@@ -7,42 +7,36 @@
       <field name="model">usuario.socia</field>
       <field name="arch" type="xml">
         <tree string="Propiedades">
-        <!-- <tree string="Properties" decoration-success="state in ('offer received', 'offer aceppted')" decoration-muted="state == 'sold'" decoration-bf="state == 'offer aceppted'"> -->
           <field name="name" string="Nombre"></field>
           <field name="surnames" string="Apellidos"></field>
-          <field name="birth_date" string="Fecha Nacimiento"/><!-- Aqui se usa el atributo widget-->
+          <field name="birth_date" string="Fecha Nacimiento"/>
           <field name="peso_actual"></field>
           <field name="altura_actual"></field>
           <field name="tipo_pase_temporada" string="Tipo Pase"></field>
-          <!-- <field name="dada_alta"></field> -->
         </tree>
       </field>
     </record>
 
     <record id="usuario_socia_view_form" model="ir.ui.view">
-        <field name="name">usuario.socia.tree</field>
+        <field name="name">usuario.socia.form</field>
         <field name="model">usuario.socia</field>
         <field name="arch" type="xml">
             <form string="Socias">
 
               <header>
                 <!-- Aquí van botones de dar de alta y baja-->
-
+                <field name="dada_alta"/>
+                <button name="action_dar_de_alta" type="object" string="Dar de alta" attrs="{'invisible':[('dada_alta', '==', True)]}"/>
+                <button name="action_dar_de_baja" type="object" string="Dar de baja" attrs="{'invisible':[('dada_alta', '==', False)]}"/>
               </header>
-
-              <!-- 
-              <div class="oe_button_box" name="button_box">
-                <button name="action_estate_property" type="object"
-                            class="oe_stat_button" icon="fa-star">
-                </button>
-              </div> 
-              -->
 
                 <sheet>
                     <group>
                         <group>
                             <field name="name" string="Nombre"/>
                             <field name="surnames" string="Apellidos"/>
+                            <field name="fecha_de_alta" string="Dada de alta en" readonly="True"/>
+                            <field name="fecha_de_baja" string="Dada de baja en" readonly="True"/>
                         </group>
                         <group>
                             <field name="edad" string="Edad"/>

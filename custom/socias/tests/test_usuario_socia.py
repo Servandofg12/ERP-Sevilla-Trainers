@@ -31,7 +31,7 @@ class UsuarioSociaTestCase(TransactionCase):
 
 
     #test donde la clienta es correcta
-    def test_socia_correcta(self):
+    def test_p_01_socia_correcta(self):
         print("\n")
         print("PRIMER TEST")
         hoy = datetime.date.today()
@@ -86,7 +86,7 @@ class UsuarioSociaTestCase(TransactionCase):
 
 
     #test donde el nombre de la clienta no es correcto
-    def test_socia_nombre_con_mayusculas(self):
+    def test_p_02_socia_nombre_con_mayusculas(self):
         print("\n")
         print("SEGUNDO TEST")
         hoy = datetime.date.today()
@@ -115,7 +115,7 @@ class UsuarioSociaTestCase(TransactionCase):
         return False
 
     #test donde el nombre de la clienta no es correcto
-    def test_socia_nombre_con_numero(self):
+    def test_p_03_socia_nombre_con_numero(self):
         print("\n")
         print("TERCER TEST")
         hoy = datetime.date.today()
@@ -145,7 +145,7 @@ class UsuarioSociaTestCase(TransactionCase):
 
     
     #test donde el apellido de la clienta no es correcto
-    def test_socia_apellidos_con_mayusculas(self):
+    def test_p_04_socia_apellidos_con_mayusculas(self):
         print("\n")
         print("CUARTO TEST")
         hoy = datetime.date.today()
@@ -174,7 +174,7 @@ class UsuarioSociaTestCase(TransactionCase):
         return False
 
     #test donde el apellido de la clienta no es correcto
-    def test_socia_apellidos_con_numero(self):
+    def test_p_05_socia_apellidos_con_numero(self):
         print("\n")
         print("QUINTO TEST")
         hoy = datetime.date.today()
@@ -204,13 +204,15 @@ class UsuarioSociaTestCase(TransactionCase):
 
     
     #test donde la socia es menor de 14 años
-    def test_socia_edad_menor_14(self):
+    def test_p_06_socia_edad_menor_14(self):
         print("\n")
         print("SEXTO TEST")
         hoy = datetime.date.today()
-        fecha_nac = hoy - relativedelta(years=13)
+        fecha_nac = hoy - relativedelta(years=10)
+        #print("Fecha nac: "+ str(fecha_nac))
         self.socias = self.env['usuario.socia']
         try:
+            var = self.assertEqual(False, True)
             self.socias.create([
                 {
                     'tiene_dni': True, 
@@ -224,18 +226,18 @@ class UsuarioSociaTestCase(TransactionCase):
                     'formas_de_pago': "transferencia",
                     'objetivo': "Quiero ganar masa muscular"
                 }])
+            return var
         except:
             print("La edad es menor a 14 años y falla al crear la socia")
             print("\n")
             var = self.assertEqual(False, False)
             return var
 
-        return False
 
     
     #test donde la socia tiene un peso negativo
     #El error en la consola es por ser restriccion SQL, pero el test se realiza correctamente
-    def test_socia_peso_negativo(self):
+    def test_p_07_socia_peso_negativo(self):
         print("\n")
         print("SEPTIMO TEST")
         hoy = datetime.date.today()
@@ -260,11 +262,13 @@ class UsuarioSociaTestCase(TransactionCase):
             print("\n")
             var = self.assertEqual(False, False)
             return var
+            
+        return False
 
         
     #test donde la socia tiene una altura negativa
     #El error en la consola es por ser restriccion SQL, pero el test se realiza correctamente
-    def test_socia_altura_negativa(self):
+    def test_p_08_socia_altura_negativa(self):
         print("\n")
         print("OCTAVO TEST")
         hoy = datetime.date.today()
@@ -294,7 +298,7 @@ class UsuarioSociaTestCase(TransactionCase):
 
     
     #test donde la socia tiene una fecha de nacimiento futura
-    def test_socia_fecha_nacimiento_futura(self):
+    def test_p_09_socia_fecha_nacimiento_futura(self):
         print("\n")
         print("NOVENO TEST")
         hoy = datetime.date.today()
@@ -325,7 +329,7 @@ class UsuarioSociaTestCase(TransactionCase):
     
     #test donde las dos clientas tienen el mismo DNI
     #El error en la consola es por ser restriccion SQL, pero el test se realiza correctamente
-    def test_socia_con_mismo_dni(self):
+    def test_p_10_socia_con_mismo_dni(self):
         print("\n")
         print("DECIMO TEST")
         hoy = datetime.date.today()
@@ -370,7 +374,7 @@ class UsuarioSociaTestCase(TransactionCase):
     
     #test donde las dos clientas tienen el mismo NIE
     #El error en la consola es por ser restriccion SQL, pero el test se realiza correctamente
-    def test_socia_con_mismo_nie(self):
+    def test_p_11_socia_con_mismo_nie(self):
         print("\n")
         print("DECIMO PRIMER TEST")
         hoy = datetime.date.today()

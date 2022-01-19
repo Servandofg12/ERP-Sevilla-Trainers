@@ -3,7 +3,7 @@
     'version': '1.0',
     'depends': ['base'],
     "auto_install": True,
-    'author': "SeRv_128",
+    'author': "Servandofg12",
     'category': 'App',
     'description': """
     Módulo para socias o clientas del gimnasio Sevilla Trainers.
