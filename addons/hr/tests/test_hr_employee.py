@@ -3,8 +3,11 @@
 
 from odoo.tests import Form
 from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.tests import tagged
+import datetime
+from dateutil.relativedelta import relativedelta
 
-
+@tagged('empleados')
 class TestHrEmployee(TestHrCommon):
 
     def setUp(self):
@@ -21,8 +24,32 @@ class TestHrEmployee(TestHrCommon):
             'image_1920': False
         })
 
+        #Para las pruebas de dar de alta y baja
+        self.user_without_image_2 = self.env['res.users'].create([{
+            'name': 'Prueba',
+            'email': 'prueba23@example.com',
+            'image_1920': False,
+            'login': 'prueba_1',
+            'password': 'prueba_123'
+        },{
+            'name': 'Prueba2',
+            'email': 'prueba23333@example.com',
+            'image_1920': False,
+            'login': 'prueba_2',
+            'password': 'prueba_123'
+        }])
+        self.employee_without_image_2 = self.env['hr.employee'].create([{
+            'user_id': self.user_without_image_2[0].id,
+            'image_1920': False,
+        },{
+            'user_id': self.user_without_image_2[1].id,
+            'image_1920': False,
+            'dada_alta': False,
+            'fecha_de_baja': datetime.date.today() - relativedelta(months=2)
+        }])
+
     def test_employee_resource(self):
-        _tz = 'Pacific/Apia'
+        _tz = 'UTC'
         self.res_users_hr_officer.company_id.resource_calendar_id.tz = _tz
         Employee = self.env['hr.employee'].with_user(self.res_users_hr_officer)
         employee_form = Form(Employee)
@@ -46,7 +73,7 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(employee.work_email, self.res_users_hr_officer.email)
         self.assertEqual(employee.tz, self.res_users_hr_officer.tz)
 
-    def test_employee_from_user_tz_no_reset(self):
+    '''def test_employee_from_user_tz_no_reset(self):
         _tz = 'Pacific/Apia'
         self.res_users_hr_officer.tz = False
         Employee = self.env['hr.employee'].with_user(self.res_users_hr_officer)
@@ -58,7 +85,7 @@ class TestHrEmployee(TestHrCommon):
         employee = employee_form.save()
         self.assertEqual(employee.name, 'Raoul Grosbedon')
         self.assertEqual(employee.work_email, self.res_users_hr_officer.email)
-        self.assertEqual(employee.tz, _tz)
+        self.assertEqual(employee.tz, _tz)'''
 
     def test_employee_has_avatar_even_if_it_has_no_image(self):
         self.assertTrue(self.employee_without_image.avatar_128)
@@ -69,3 +96,94 @@ class TestHrEmployee(TestHrCommon):
 
     def test_employee_has_same_avatar_as_corresponding_user(self):
         self.assertEqual(self.employee_without_image.avatar_1920, self.user_without_image.avatar_1920)
+
+
+
+    #TESTS PARA COMPROBAR LA FUNCIONALIDAD DE DAR DE ALTA Y BAJA -----------------------------------------------------------------------
+
+    #test para comprobar que se da de baja correctamente
+    def test_p_1_action_action_dar_de_alta(self):
+        print("PRIMER TEST")
+        print("\n")
+        #Solo el segundo esta dado de baja ([1]), por lo tanto, el primero ([0]) esta dado de alta.
+        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[1].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[1].fecha_de_baja))
+        print("\n")
+        self.employee_without_image_2[1].action_dar_de_alta()
+        print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[1].dada_alta) + " - Fecha de alta: " + str(self.employee_without_image_2[1].fecha_de_alta))
+        print("\n")
+        var = self.assertRecordValues(self.employee_without_image_2,[
+            {'name': 'Prueba', 'dada_alta': True},
+            {'name': 'Prueba2', 'dada_alta': True}
+        ])
+
+        return var
+
+    #test para comprobar que no se puede dar de alta si ya esta dada de alta
+    def test_p_2_action_action_dar_de_alta_falla(self):
+        print("SEGUNDO TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[0].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[0].fecha_de_baja))
+        print("\n")
+        try:
+            self.employee_without_image_2[0].action_dar_de_alta()
+            print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[0].dada_alta) + " - Fecha de alta: " + str(self.employee_without_image_2[0].fecha_de_alta))
+            print("\n")
+            var = self.assertRecordValues(self.employee_without_image_2,[
+                {'name': 'Prueba', 'dada_alta': True},
+                {'name': 'Prueba2', 'dada_alta': False}
+            ])
+            return var
+        except:
+            print("Ya estaba dada de alta por lo que salta la exception UserError")
+            print("\n")
+            var = self.assertRecordValues(self.employee_without_image_2,[
+                {'name': 'Prueba', 'dada_alta': True},
+                {'name': 'Prueba2', 'dada_alta': False}
+            ])
+            return var
+
+
+    #test para comprobar que se da de baja si correctamente
+    def test_p_3_action_action_dar_de_baja(self):
+        print("TERCER TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[0].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[0].fecha_de_baja))
+        print("\n")
+
+        self.employee_without_image_2[0].action_dar_de_baja()
+
+        print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[0].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[0].fecha_de_baja))
+        print("\n")
+        var = self.assertRecordValues(self.employee_without_image_2,[
+                {'name': 'Prueba', 'dada_alta': False},
+                {'name': 'Prueba2', 'dada_alta': False}
+                ])
+        return var
+
+
+    #test para comprobar que no se puede dar de alta si ya esta dada de alta
+    def test_p_4_action_action_dar_de_baja_falla(self):
+        print("CUARTO TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[1].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[1].fecha_de_baja))
+        print("\n")
+        try:
+            self.employee_without_image_2[1].action_dar_de_baja()
+            print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[1].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[1].fecha_de_baja))
+            print("\n")
+            var = self.assertRecordValues(self.employee_without_image_2,[
+                {'name': 'Prueba', 'dada_alta': True},
+                {'name': 'Prueba2', 'dada_alta': False}
+            ])
+            return var
+        except:
+            print("Ya estaba dada de baja por lo que salta la exception UserError")
+            print("\n")
+            var = self.assertRecordValues(self.employee_without_image_2,[
+                {'name': 'Prueba', 'dada_alta': True},
+                {'name': 'Prueba2', 'dada_alta': False}
+            ])
+            return var

@@ -3,7 +3,6 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 import datetime
 from dateutil.relativedelta import relativedelta
-from odoo.exceptions import ValidationError
 
 @tagged('post_install','socias')
 class UsuarioSociaTestCase(TransactionCase):
@@ -20,14 +19,39 @@ class UsuarioSociaTestCase(TransactionCase):
         # of in a setUp or in each test case, we reduce the testing time and
         # the duplication of code.
 
-        '''cls.users = cls.env['res.users'].create([
+        hoy = datetime.date.today()
+        fecha_estudiante = hoy - relativedelta(years=19)
+        fecha_normal = hoy - relativedelta(years=23)
+
+        cls.socias = cls.env['usuario.socia'].create([
             {
-                'name': "servandofg12",
-                'password': "1234servandofg",
-                'phone': "666666666",
-                'email': "servan@gmail.com",
-                'login': True
-            }])'''
+                'tiene_dni': True, 
+                'dni': "66727272Z",
+                'name': "Hola",
+                'surnames': "Ejemplo Ejemplo",
+                'birth_date': fecha_normal,
+                'peso_actual': 70.0,
+                'altura_actual': 1.80,
+                'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                'formas_de_pago': "transferencia",
+                'objetivo': "Quiero ganar masa muscular"
+            },
+            {
+                'tiene_dni': True, 
+                'dni': "66727272A",
+                'name': "Hello",
+                'surnames': "Example Example",
+                'birth_date': fecha_estudiante,
+                'peso_actual': 70.0,
+                'altura_actual': 1.80,
+                'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                'formas_de_pago': "en_mano",
+                'objetivo': "Quiero ganar masa muscular",
+                'dada_alta': False,
+                'fecha_de_baja': hoy - relativedelta(months=2)
+            }
+        ])
+
 
 
     #test donde la clienta es correcta
@@ -415,3 +439,93 @@ class UsuarioSociaTestCase(TransactionCase):
             return var
 
         return False
+
+
+    #TESTS PARA COMPROBAR LA FUNCIONALIDAD DE DAR DE ALTA Y BAJA -----------------------------------------------------------------------
+
+    #test para comprobar que se da de baja correctamente
+    def test_p_12_action_action_dar_de_alta(self):
+        print("DECIMO SEGUNDO TEST")
+        print("\n")
+        #Solo el segundo esta dado de baja ([1]), por lo tanto, el primero ([0]) esta dado de alta.
+        print("ANTES: Dada de alta: " + str(self.socias[1].dada_alta) + " - Fecha de baja: " + str(self.socias[1].fecha_de_baja))
+        print("\n")
+        self.socias[1].action_dar_de_alta()
+        print("DESPUES: Dada de alta: " + str(self.socias[1].dada_alta) + " - Fecha de alta: " + str(self.socias[1].fecha_de_alta))
+        print("\n")
+        var = self.assertRecordValues(self.socias,[
+            {'name': 'Hola', 'dada_alta': True},
+            {'name': 'Hello', 'dada_alta': True}
+        ])
+
+        return var
+
+    #test para comprobar que no se puede dar de alta si ya esta dada de alta
+    def test_p_13_action_action_dar_de_alta_falla(self):
+        print("DECIMO TERCER TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Dada de alta: " + str(self.socias[0].dada_alta) + " - Fecha de baja: " + str(self.socias[0].fecha_de_baja))
+        print("\n")
+        try:
+            self.socias[0].action_dar_de_alta()
+            print("DESPUES: Dada de alta: " + str(self.socias[0].dada_alta) + " - Fecha de alta: " + str(self.socias[0].fecha_de_alta))
+            print("\n")
+            var = self.assertRecordValues(self.socias,[
+                {'name': 'Hola', 'dada_alta': True},
+                {'name': 'Hello', 'dada_alta': False}
+            ])
+            return var
+        except:
+            print("Ya estaba dada de alta por lo que salta la exception UserError")
+            print("\n")
+            var = self.assertRecordValues(self.socias,[
+                {'name': 'Hola', 'dada_alta': True},
+                {'name': 'Hello', 'dada_alta': False}
+            ])
+            return var
+
+
+    #test para comprobar que se da de baja si correctamente
+    def test_p_14_action_action_dar_de_baja(self):
+        print("DECIMO CUARTO TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Dada de alta: " + str(self.socias[0].dada_alta) + " - Fecha de baja: " + str(self.socias[0].fecha_de_baja))
+        print("\n")
+
+        self.socias[0].action_dar_de_baja()
+
+        print("DESPUES: Dada de alta: " + str(self.socias[0].dada_alta) + " - Fecha de baja: " + str(self.socias[0].fecha_de_baja))
+        print("\n")
+        var = self.assertRecordValues(self.socias,[
+                {'name': 'Hola', 'dada_alta': False},
+                {'name': 'Hello', 'dada_alta': False}
+                ])
+        return var
+
+
+    #test para comprobar que no se puede dar de alta si ya esta dada de alta
+    def test_p_15_action_action_dar_de_baja_falla(self):
+        print("DECIMO QUINTO TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Dada de alta: " + str(self.socias[1].dada_alta) + " - Fecha de baja: " + str(self.socias[1].fecha_de_baja))
+        print("\n")
+        try:
+            self.socias[1].action_dar_de_baja()
+            print("DESPUES: Dada de alta: " + str(self.socias[1].dada_alta) + " - Fecha de baja: " + str(self.socias[1].fecha_de_baja))
+            print("\n")
+            var = self.assertRecordValues(self.socias,[
+                {'name': 'Hola', 'dada_alta': True},
+                {'name': 'Hello', 'dada_alta': False}
+            ])
+            return var
+        except:
+            print("Ya estaba dada de baja por lo que salta la exception UserError")
+            print("\n")
+            var = self.assertRecordValues(self.socias,[
+                {'name': 'Hola', 'dada_alta': True},
+                {'name': 'Hello', 'dada_alta': False}
+            ])
+            return var
