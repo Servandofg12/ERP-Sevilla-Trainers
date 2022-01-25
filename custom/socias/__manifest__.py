@@ -12,6 +12,7 @@
         'security/ir.model.access.csv',
         'views/usuario_socia_view.xml',
         'views/res_user_view.xml',
+        'views/revision_mensual_view.xml',
         'views/usuario_socia_menu.xml'
         ],
     "license":"LGPL-3",

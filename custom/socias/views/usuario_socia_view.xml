@@ -2,7 +2,7 @@
   <odoo>
 
     <!-- Para la vista de Listado o Tree-->
-    <record id="estate_property_view_tree" model="ir.ui.view">
+    <record id="usuario_socia_view_tree" model="ir.ui.view">
       <field name="name">usuario.socia.tree</field>
       <field name="model">usuario.socia</field>
       <field name="arch" type="xml">
@@ -36,12 +36,13 @@
                             <field name="name" string="Nombre"/>
                             <field name="surnames" string="Apellidos"/>
                             <field name="fecha_de_alta" string="Dada de alta en" readonly="True"/>
-                            <field name="fecha_de_baja" string="Dada de baja en" readonly="True"/>
+                            <field name="fecha_de_baja" string="Dada de baja en" readonly="True" attrs="{'invisible':[('dada_alta', '==', True)]}"/>
                         </group>
                         <group>
                             <field name="edad" string="Edad"/>
                             <field name="coste_pase" string="Coste del Pase"/>
                             <field name="dia_de_pago" string="Próximo día de Pago"/>
+                            <field name="dada_alta" string="Dada de alta" invisible="True"/>
                         </group>
                     </group>
                     <group>
@@ -79,6 +80,11 @@
                                 <field name="tipo_pase_temporada" string="Tipo de Pase"/>
                               </group>
                             </page4>
+                            <page5 string="Revisión Mensual" attrs="{'invisible':[('dada_alta', '==', False)]}">
+                              <group>
+                                <field name="revision_mensual_ids" widget="one2many_list"/>
+                              </group>
+                            </page5>
                         </notebook>
                     </group>
                 </sheet>

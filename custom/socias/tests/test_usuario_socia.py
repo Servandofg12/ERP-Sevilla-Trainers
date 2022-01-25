@@ -4,7 +4,7 @@ from odoo.tests import tagged
 import datetime
 from dateutil.relativedelta import relativedelta
 
-@tagged('post_install','socias')
+@tagged('socias')
 class UsuarioSociaTestCase(TransactionCase):
 
     @classmethod

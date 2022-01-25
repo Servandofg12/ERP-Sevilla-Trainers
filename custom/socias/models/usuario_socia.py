@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 class UsuarioSocia(models.Model):#retocar el security 
     _name = "usuario.socia"
-    _description = "Usuario de socias o clientas para el gimnasio"
+    _description = "Usuario de socias o clientas para el gimnasio."
     _order = "name"
 
     #Atributos de una socia o clienta------------------------------------------------------------------------------------------------------
@@ -37,6 +37,7 @@ class UsuarioSocia(models.Model):#retocar el security
 
     #Relaciones con otras tablas----------------------------------------------------------------------------------------------------------
     user_id = fields.Many2one('res.users', 'User', index=True, store=True, readonly=False)#validar que un usuario no puede repetirse en la base de datos
+    revision_mensual_ids = fields.One2many("revision.mensual", "usuario_socia_id",string="Revisión Mensual")
 
     #Computed fields----------------------------------------------------------------------------------------------------------------------
     edad = fields.Integer(compute="_compute_edad")
