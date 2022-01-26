@@ -85,6 +85,11 @@
                                 <field name="revision_mensual_ids" widget="one2many_list"/>
                               </group>
                             </page5>
+                            <page6 string="Entrenamiento" attrs="{'invisible':[('dada_alta', '==', False)]}">
+                              <group>
+                                <field name="entrenamientos_socia_ids" widget="one2many_list"/>
+                              </group>
+                            </page6>
                         </notebook>
                     </group>
                 </sheet>

@@ -1,3 +1,5 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 access_usuario_socia,access_usuario_socia,model_usuario_socia,base.group_user,1,1,1,1
-acces_revision_mensual,access_revision_mensual,model_revision_mensual,base.group_user,1,1,1,1
+access_revision_mensual,access_revision_mensual,model_revision_mensual,base.group_user,1,1,1,1
+access_entrenamiento_socia,access_entrenamiento_socia,model_entrenamiento_socia,base.group_user,1,1,1,1
+access_maquinas_entrenamiento,access_maquinas_entrenamiento,model_maquinas_entrenamiento,base.group_user,1,1,1,1

@@ -37,7 +37,8 @@ class UsuarioSocia(models.Model):#retocar el security
 
     #Relaciones con otras tablas----------------------------------------------------------------------------------------------------------
     user_id = fields.Many2one('res.users', 'User', index=True, store=True, readonly=False)#validar que un usuario no puede repetirse en la base de datos
-    revision_mensual_ids = fields.One2many("revision.mensual", "usuario_socia_id",string="Revisión Mensual")
+    revision_mensual_ids = fields.One2many("revision.mensual", "usuario_socia_id", string="Revisión Mensual")
+    entrenamientos_socia_ids = fields.One2many("entrenamiento.socia", "usuario_socia_id", string="Entrenamientos")
 
     #Computed fields----------------------------------------------------------------------------------------------------------------------
     edad = fields.Integer(compute="_compute_edad")

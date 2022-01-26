@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class RevisionMensual(models.Model):
     _name = "revision.mensual"
-    _description = "Revisión menusal para las socias del gimnasio."
+    _description = "Revisión mensual para las socias del gimnasio."
     _order = "fecha_realizada desc"
 
     #Atributos de una socia o clienta------------------------------------------------------------------------------------------------------
@@ -66,6 +66,7 @@ class RevisionMensual(models.Model):
                         "altura_actual": vals['nueva_altura']
                     }
                 )
-
+            
+            #Creamos la revision mensual
             result = super(RevisionMensual, self).create(vals)
             return result
