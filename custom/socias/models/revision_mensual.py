@@ -45,28 +45,42 @@ class RevisionMensual(models.Model):
     #On create ---------------------------------------------------------------------------------------------------------------------------
     @api.model
     def create(self, vals):
+        #hay que comparar la fecha de hoy y ver si la fecha de hoy es menor que la ultima revision mas un mes
         hoy = datetime.date.today()
-        hoy_mas_un_mes = hoy + relativedelta(months=1)
-        fecha_comparacion = hoy_mas_un_mes - relativedelta(days=1)
         socia = self.env["usuario.socia"].browse(vals['usuario_socia_id'])
+        primero = True
 
         if len(socia.revision_mensual_ids)>0:
             fecha_ultima_revision = socia.revision_mensual_ids[-1].fecha_realizada
-        else:
-            fecha_ultima_revision = hoy + relativedelta(months=2)
+            fecha_revision_mas_mes = fecha_ultima_revision + relativedelta(months=1) - relativedelta(days=1)
+            primero = False
 
-        if fecha_ultima_revision < fecha_comparacion:
-            raise UserError("Todavia no puede hacerse su revisión. Debe esperar hasta el día " + str(fecha_ultima_revision + relativedelta(months=1)))
-        else:
-        
-            #Editamos los datos de la socia y actualizamos el peso actual y la altura actual con la de la revision mensual
-            self.env["usuario.socia"].browse(vals['usuario_socia_id']).write(
-                    {
-                        "peso_actual": vals['nuevo_peso'],
-                        "altura_actual": vals['nueva_altura']
-                    }
-                )
+        if not primero:
+            if hoy < fecha_revision_mas_mes :
+                raise UserError("Todavia no puede hacerse su revisión. Debe esperar hasta el día " + str(fecha_ultima_revision + relativedelta(months=1)))
+            else:
             
+                #Editamos los datos de la socia y actualizamos el peso actual y la altura actual con la de la revision mensual
+                self.env["usuario.socia"].browse(vals['usuario_socia_id']).write(
+                        {
+                            "peso_actual": vals['nuevo_peso'],
+                            "altura_actual": vals['nueva_altura']
+                        }
+                    )
+                
+                #Creamos la revision mensual
+                result = super(RevisionMensual, self).create(vals)
+                return result
+
+        else:
+
+            self.env["usuario.socia"].browse(vals['usuario_socia_id']).write(
+                        {
+                            "peso_actual": vals['nuevo_peso'],
+                            "altura_actual": vals['nueva_altura']
+                        }
+                    )
+                
             #Creamos la revision mensual
             result = super(RevisionMensual, self).create(vals)
             return result

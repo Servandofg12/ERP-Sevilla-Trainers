@@ -52,6 +52,14 @@ class UsuarioSociaTestCase(TransactionCase):
             }
         ])
 
+        cls.maquinas =cls.env['maquinas.entrenamiento'].create([
+            {
+                'name': "Sentadillas"
+            },
+            {
+                'name': "Pecho/Espalda"
+            }
+        ])
 
 
     #test donde la clienta es correcta
@@ -529,3 +537,254 @@ class UsuarioSociaTestCase(TransactionCase):
                 {'name': 'Hello', 'dada_alta': False}
             ])
             return var
+
+
+    #TESTS PARA COMPROBAR LA FUNCIONALIDAD DE REVISION MENSUAL -----------------------------------------------------------------------
+
+    #test para comprobar que funciona correctamente la revision mensual
+    def test_p_16_revision_mensual_correcta(self):
+        print("DECIMO SEXTO TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("\n")
+        self.revision = self.env['revision.mensual']
+        self.revision.create([
+                {
+                    'nuevo_peso': 90.0,
+                    'nueva_altura': 1.78,
+                    'porcentaje_grasa_corporal': 15,
+                    'indice_masa_corporal': 13,
+                    'medida_pecho': 30,
+                    'medida_cintura': 35,
+                    'medida_abdomen': 30,
+                    'medida_caderas': 35,
+                    'medida_muslos': 20,
+                    'medida_brazos': 15,
+                    'fecha_realizada': datetime.date.today(),
+                    'usuario_socia_id': self.socias[0].id
+                }])
+
+        print("DESPUES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("\n")
+
+        var = self.assertEqual(1, len(self.socias[0].revision_mensual_ids))
+        return var
+
+    #test para comprobar que no se pueden crear 2 en el mismo mes
+    def test_p_17_revision_mensual_falla(self):
+        print("DECIMO SEPTIMO TEST")
+        print("\n")
+
+        self.revision = self.env['revision.mensual']
+        self.revision.create([
+                {
+                    'nuevo_peso': 90.0,
+                    'nueva_altura': 1.78,
+                    'porcentaje_grasa_corporal': 15,
+                    'indice_masa_corporal': 13,
+                    'medida_pecho': 30,
+                    'medida_cintura': 35,
+                    'medida_abdomen': 30,
+                    'medida_caderas': 35,
+                    'medida_muslos': 20,
+                    'medida_brazos': 15,
+                    'fecha_realizada': datetime.date.today(),
+                    'usuario_socia_id': self.socias[0].id
+                }])
+
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("\n")
+
+        try:
+            print("Intentando añadir otra revisión con la misma fecha...")
+            self.revision_falla = self.env['revision.mensual']
+            self.revision_falla.create([
+                {
+                    'nuevo_peso': 90.0,
+                    'nueva_altura': 1.78,
+                    'porcentaje_grasa_corporal': 15,
+                    'indice_masa_corporal': 13,
+                    'medida_pecho': 30,
+                    'medida_cintura': 35,
+                    'medida_abdomen': 30,
+                    'medida_caderas': 35,
+                    'medida_muslos': 20,
+                    'medida_brazos': 15,
+                    'fecha_realizada': datetime.date.today(),
+                    'usuario_socia_id': self.socias[0].id
+                }])
+        except:
+            print("Falla porque se debe esperar un mes para poder hacer otra revisión.")
+            print("DESPUES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+            print("\n")
+
+            var = self.assertEqual(1, len(self.socias[0].revision_mensual_ids))
+            return var
+        
+    #test para comprobar que no se pueden crear 2 en el mismo mes
+    def test_p_18_revision_mensual_falla(self):
+        print("DECIMO OCTAVO TEST")
+        print("\n")
+
+        self.revision = self.env['revision.mensual']
+        self.revision.create([
+                {
+                    'nuevo_peso': 90.0,
+                    'nueva_altura': 1.78,
+                    'porcentaje_grasa_corporal': 15,
+                    'indice_masa_corporal': 13,
+                    'medida_pecho': 30,
+                    'medida_cintura': 35,
+                    'medida_abdomen': 30,
+                    'medida_caderas': 35,
+                    'medida_muslos': 20,
+                    'medida_brazos': 15,
+                    'fecha_realizada': datetime.date.today(),
+                    'usuario_socia_id': self.socias[0].id
+                }])
+
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("\n")
+
+        try:
+            print("Intentando añadir otra revisión con la misma fecha...")
+            self.revision_falla = self.env['revision.mensual']
+            self.revision_falla.create([
+                {
+                    'nuevo_peso': 90.0,
+                    'nueva_altura': 1.78,
+                    'porcentaje_grasa_corporal': 15,
+                    'indice_masa_corporal': 13,
+                    'medida_pecho': 30,
+                    'medida_cintura': 35,
+                    'medida_abdomen': 30,
+                    'medida_caderas': 35,
+                    'medida_muslos': 20,
+                    'medida_brazos': 15,
+                    'fecha_realizada': datetime.date.today() + relativedelta(months=1) - relativedelta(days=1),
+                    'usuario_socia_id': self.socias[0].id
+                }])
+        except:
+            print("Falla porque se debe esperar un mes para poder hacer otra revisión.")
+            print("DESPUES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+            print("\n")
+
+            var = self.assertEqual(1, len(self.socias[0].revision_mensual_ids))
+            return var
+
+    #test para comprobar que se pueden crear 2 en distinto mes
+    def test_p_19_dos_revisiones_mensuales_correctas(self):
+        print("DECIMO NOVENO TEST")
+        print("\n")
+
+        print("ANTES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("\n")
+
+        self.revision = self.env['revision.mensual']
+        self.revision.create([
+                {
+                    'nuevo_peso': 90.0,
+                    'nueva_altura': 1.78,
+                    'porcentaje_grasa_corporal': 15,
+                    'indice_masa_corporal': 13,
+                    'medida_pecho': 30,
+                    'medida_cintura': 35,
+                    'medida_abdomen': 30,
+                    'medida_caderas': 35,
+                    'medida_muslos': 20,
+                    'medida_brazos': 15,
+                    'fecha_realizada': datetime.date.today() - relativedelta(months=1),
+                    'usuario_socia_id': self.socias[0].id
+                }])
+
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("DESPUES de una revision: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("\n")
+        
+        self.revision_falla = self.env['revision.mensual']
+        self.revision_falla.create([
+                {
+                    'nuevo_peso': 90.0,
+                    'nueva_altura': 1.78,
+                    'porcentaje_grasa_corporal': 15,
+                    'indice_masa_corporal': 13,
+                    'medida_pecho': 30,
+                    'medida_cintura': 35,
+                    'medida_abdomen': 30,
+                    'medida_caderas': 35,
+                    'medida_muslos': 20,
+                    'medida_brazos': 15,
+                    'fecha_realizada': datetime.date.today(),
+                    'usuario_socia_id': self.socias[0].id
+                }])
+
+        print("DESPUES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("\n")
+
+        var = self.assertEqual(2, len(self.socias[0].revision_mensual_ids))
+        return var
+
+    
+    #TESTS PARA COMPROBAR LA FUNCIONALIDAD DE ENTRENAMIENTO PERSONAL -----------------------------------------------------------------------
+
+    #test para comprobar que se pueden crear un entrenamiento
+    def test_p_20_entrenamiento_personal(self):
+        print("VIGESIMO TEST")
+        print("\n")
+
+        print("ANTES: Número de entrenamientos: " + str(len(self.socias[0].entrenamientos_socia_ids)))
+        print("\n")
+
+        self.entrenamiento = self.env['entrenamiento.socia']
+        self.entrenamiento.create([
+                {
+                    'nombre': "Mi entrenamiento",
+                    'num_vueltas': 1,
+                    'usa_maquinas': True,
+                    'maquinas_entrenamiento_ids': self.maquinas[0],
+                    'usuario_socia_id': self.socias[0].id
+                }])
+
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("DESPUES: Número de entrenamientos: " + str(len(self.socias[0].entrenamientos_socia_ids)))
+        print("\n")
+
+        var = self.assertEqual(1, len(self.socias[0].entrenamientos_socia_ids))
+        return var
+
+    #test para comprobar que se pueden crear 2 entrenamientos
+    def test_p_21_dos_entrenamientos_personales(self):
+        print("VIGESIMO PRIMER TEST")
+        print("\n")
+
+        print("ANTES: Número de entrenamientos: " + str(len(self.socias[0].entrenamientos_socia_ids)))
+        print("\n")
+
+        self.entrenamiento = self.env['entrenamiento.socia']
+        self.entrenamiento.create([
+                {
+                    'nombre': "Mi entrenamiento",
+                    'num_vueltas': 1,
+                    'usa_maquinas': True,
+                    'maquinas_entrenamiento_ids': self.maquinas[0],
+                    'usuario_socia_id': self.socias[0].id
+                },
+                {
+                    'nombre': "Mi entrenamiento 2",
+                    'num_vueltas': 2,
+                    'usa_maquinas': True,
+                    'maquinas_entrenamiento_ids': [self.maquinas[0].id, self.maquinas[1].id],
+                    'usuario_socia_id': self.socias[0].id
+                }
+                ])
+
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("DESPUES: Número de entrenamientos: " + str(len(self.socias[0].entrenamientos_socia_ids)))
+        print("\n")
+
+        var = self.assertEqual(2, len(self.socias[0].entrenamientos_socia_ids))
+        return var
+
