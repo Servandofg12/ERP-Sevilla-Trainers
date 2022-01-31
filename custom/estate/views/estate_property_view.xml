@@ -42,12 +42,6 @@
                 <field name="state" widget="statusbar" statusbar_visible="new,offer received,offer aceppted,sold"/>
               </header>
 
-              <div class="oe_button_box" name="button_box">
-                <button name="action_estate_property" type="object"
-                            class="oe_stat_button" icon="fa-star">
-                </button>
-              </div>
-
                 <sheet>
                 <h2><field name="name"/></h2>
                     <group>
@@ -55,6 +49,7 @@
                             <field name="property_type_id" string="Property Type"  widget="many2one" options="{'no_create': True}"/>
                             <field name="postcode"/>
                             <field name="date_availability" string="Available From"/>
+                            <field name="num_ejemplo" string="Inherited num_ejemplo" />
                         </group>
                         <group>
                             <field name="property_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>

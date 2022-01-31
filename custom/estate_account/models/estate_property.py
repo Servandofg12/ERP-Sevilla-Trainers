@@ -1,7 +1,10 @@
-from odoo import models, Command
+from django.forms import fields
+from odoo import models, Command, fields
 
 class EstatePropertyInherited(models.Model):
     _inherit = "estate.property"
+
+    num_ejemplo = fields.Integer(default=1)
 
     def action_sold_estate(self):
         #print("ENTRA AQUIII")

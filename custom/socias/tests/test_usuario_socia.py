@@ -547,6 +547,8 @@ class UsuarioSociaTestCase(TransactionCase):
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
         print("ANTES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("Peso de la socia: " + str(self.socias[0].peso_actual))
+        print("Altura de la socia: " + str(self.socias[0].altura_actual))
         print("\n")
         self.revision = self.env['revision.mensual']
         self.revision.create([
@@ -566,6 +568,8 @@ class UsuarioSociaTestCase(TransactionCase):
                 }])
 
         print("DESPUES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("Peso de la socia: " + str(self.socias[0].peso_actual))
+        print("Altura de la socia: " + str(self.socias[0].altura_actual))
         print("\n")
 
         var = self.assertEqual(1, len(self.socias[0].revision_mensual_ids))
