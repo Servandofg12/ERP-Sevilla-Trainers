@@ -133,7 +133,7 @@ class HrEmployeePrivate(models.Model):
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
-        ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
+        ('user_uniq', 'unique (user_id, company_id)', "Este usuario ya pertenece a otra persona. Por favor, escriba otro distinto.")
     ]
 
     @api.depends('name', 'user_id.avatar_1920', 'image_1920')
@@ -257,6 +257,23 @@ class HrEmployeePrivate(models.Model):
             res['res_model'] = 'hr.employee.public'
 
         return res
+
+    #MY CONSTRAINS --------------------------------------------------------------------------------------------------------------------------------------
+
+    @api.constrains("user_id")
+    def _check_user_id(self):
+        for record in self:
+            usuario = record.user_id
+
+            if usuario:
+
+                self._cr.execute('select count(*) from usuario_socia where user_id = %s', (usuario.id,))
+                data = self._cr.dictfetchall()
+
+                if data[0]['count'] > 0:
+                    raise ValidationError("Este usuario ya pertenece a otra persona. Por favor, escriba otro distinto.")
+
+    #-----------------------------------------------------------------------------------------------------------------------------------------------------
 
     @api.constrains('pin')
     def _verify_pin(self):

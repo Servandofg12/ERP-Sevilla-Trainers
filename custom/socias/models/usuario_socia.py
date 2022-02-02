@@ -2,7 +2,7 @@ from odoo import api, fields, models, exceptions
 import datetime
 import re
 from dateutil.relativedelta import relativedelta
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class UsuarioSocia(models.Model):#retocar el security 
@@ -34,6 +34,7 @@ class UsuarioSocia(models.Model):#retocar el security
     pagado = fields.Boolean(default=True)#intentar hacer que cuando se pase el dia_de_pago que se ponga a false
     dia_de_pago = fields.Date(default=datetime.date.today() + relativedelta(months=1), readonly=True)#poner automático a 1 mes después cada vez que se paga
     objetivo = fields.Char()
+    image_1920 = fields.Image(compute_sudo=True)
 
     #Relaciones con otras tablas----------------------------------------------------------------------------------------------------------
     user_id = fields.Many2one('res.users', 'User', index=True, store=True, readonly=False)#validar que un usuario no puede repetirse en la base de datos
@@ -55,7 +56,7 @@ class UsuarioSocia(models.Model):#retocar el security
     _sql_constraints = [
         ('check_peso_actual', 'CHECK(peso_actual > 0)', 'El peso debe ser positivo y mayor que 0.'),
         ('check_altura_actual', 'CHECK(altura_actual > 0)', 'La altura debe ser positiva y mayor que 0.'),
-        ('user_uniq', 'unique (user_id)', "Un usuario no puede pertenecer a dos socias."),
+        ('user_uniq', 'unique (user_id)', "Este usuario ya pertenece a otra persona. Por favor, escriba otro distinto."),
         ('dni_uniq', 'unique (dni)', "Ese DNI ya pertenece a alguien."),
         ('nie_uniq', 'unique (nie)', "Ese NIE ya pertenece a alguien."),
         ('unique_email', 'unique (correo)', 'El correo ya existe.'),
@@ -114,12 +115,19 @@ class UsuarioSocia(models.Model):#retocar el security
                     primera = False
 
 
-    '''@api.constrains("user_id")
-    def _check_name_and_surnames(self):
+    @api.constrains("user_id")
+    def _check_user_id(self):
         for record in self:
-            usuarios = record.user_id.socia_ids
-            for usuario in usuarios:
-                print(usuario)'''
+            usuario = record.user_id
+
+            if usuario:
+
+                self._cr.execute('select count(*) from hr_employee where user_id = %s', (usuario.id,))
+                data = self._cr.dictfetchall()
+
+                if data[0]['count'] > 0:
+                    raise ValidationError("Este usuario ya pertenece a otra persona. Por favor, escriba otro distinto.")
+
 
 
     #Computed fields functions-------------------------------------------------------------------------------------------------------------

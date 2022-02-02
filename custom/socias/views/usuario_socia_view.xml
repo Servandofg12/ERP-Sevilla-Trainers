@@ -31,6 +31,7 @@
               </header>
 
                 <sheet>
+                          <field name="image_1920" widget='image' class="oe_avatar"/>
                     <group>
                         <group>
                             <field name="name" string="Nombre"/>
@@ -123,23 +124,33 @@
   <field name="arch" type="xml">
     <kanban default_group_by="tipo_pase_temporada" records_draggable="0">
       <field name="dada_alta"/><!-- Es necesario para los t-if-->
+      <field name="image_1920"/>
       <templates>
           <t t-name="kanban-box">
-              <div class="oe_kanban_global_click">
-                <div>
-                  <h3><field name="name"/> <field name="surnames"/></h3>
-                </div>
-                <div>
+              <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                  <field name="image_1920" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
+              <div class="oe_kanban_details">
+              <div class="o_kanban_record_top">
+              <div class="o_kanban_record_headings">
                   <strong class="o_kanban_record_title">
-                  Nombre Usuario: <field name="user_id"/>
+                  <div class="float-right">
+                    <h3><field name="name"/> <field name="surnames"/></h3>
+                  </div>
+                  <div>
+                    <strong class="o_kanban_record_title">
+                    Nombre Usuario: <field name="user_id"/>
+                    </strong>
+                  </div>
+                  <div>
+                    Tipo Pase: <field name="tipo_pase_temporada"/>
+                  </div>
+                  <div class="float-right" t-if="record.dada_alta.raw_value">
+                    Dada de alta en la fecha: <field name="fecha_de_alta"/>
+                  </div>
                   </strong>
-                </div>
-                <div>
-                  Tipo Pase: <field name="tipo_pase_temporada"/>
-                </div>
-                <div t-if="record.dada_alta.raw_value">
-                  Dada de alta en la fecha: <field name="fecha_de_alta"/>
-                </div>
+              </div>
+              </div>
+              </div>
               </div>
           </t>
       </templates>
