@@ -37,7 +37,14 @@ class TestHrEmployee(TestHrCommon):
             'image_1920': False,
             'login': 'prueba_2',
             'password': 'prueba_123'
+        },{
+            'name': 'Prueba3',
+            'email': 'prueba3333@example.com',
+            'image_1920': False,
+            'login': 'prueba_3',
+            'password': 'prueba_123'
         }])
+
         self.employee_without_image_2 = self.env['hr.employee'].create([{
             'user_id': self.user_without_image_2[0].id,
             'image_1920': False,
@@ -47,6 +54,28 @@ class TestHrEmployee(TestHrCommon):
             'dada_alta': False,
             'fecha_de_baja': datetime.date.today() - relativedelta(months=2)
         }])
+
+        fecha_normal = datetime.date.today() - relativedelta(years=23)
+
+        self.socias = self.env['usuario.socia'].create(
+                {
+                    'tiene_dni': True, 
+                    'dni': "66727211S",
+                    'name': "Hola",
+                    'surnames': "Ejemplo Ejemplo",
+                    'birth_date': fecha_normal,
+                    'peso_actual': 65.0,
+                    'altura_actual': 1.75,
+                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'formas_de_pago': "transferencia",
+                    'objetivo': "Quiero ganar confianza en mí misma.",
+                    'user_id': self.user_without_image_2[2].id
+                }
+            )
+
+
+
+
 
     def test_employee_resource(self):
         _tz = 'UTC'
@@ -187,3 +216,89 @@ class TestHrEmployee(TestHrCommon):
                 {'name': 'Prueba2', 'dada_alta': False}
             ])
             return var
+
+    #test para comprobar que no se puede crear otro empleado con el mismo usuario de inicio de sesión
+    def test_p_5_crear_usuario_con_mismo_inicio_sesion(self):
+        print("QUINTO TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Usuario: " + str(self.employee_without_image_2[0].user_id.name))
+        print("\n")
+        try:
+            self.employee_without_image_falla = self.env['hr.employee'].create({
+            'user_id': self.user_without_image_2[0].id,
+            'image_1920': False,
+        })
+        except:
+            print("Ya existe ese inicio de sesión, entonces falla.")
+            print("\n")
+            var = True
+            return var
+
+    #test para comprobar que no se puede crear una socia con el mismo usuario de inicio de sesión que un empleado
+    def test_p_6_crear_usuario_con_mismo_inicio_sesion_que_empleado(self):
+        print("SEXTO TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Usuario empleado: " + str(self.employee_without_image_2[0].user_id.name))
+        print("\n")
+        try:
+            fecha_normal = datetime.date.today() - relativedelta(years=23)
+
+            self.socias = self.env['usuario.socia'].create([
+                {
+                    'tiene_dni': True, 
+                    'dni': "66727211S",
+                    'name': "Hola",
+                    'surnames': "Ejemplo Ejemplo",
+                    'birth_date': fecha_normal,
+                    'peso_actual': 65.0,
+                    'altura_actual': 1.75,
+                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'formas_de_pago': "transferencia",
+                    'objetivo': "Quiero ganar confianza en mí misma.",
+                    'user_id': self.employee_without_image_2[0].user_id.id
+                }
+            ])
+        except:
+            print("Ya existe ese inicio de sesión, entonces falla.")
+            print("\n")
+            var = True
+            return var
+
+    #test para comprobar que no se puede crear otro empleado con el mismo usuario de inicio de sesión que una socia
+    def test_p_7_crear_usuario_con_mismo_inicio_sesion_que_socia(self):
+        print("SEPTIMO TEST")
+        print("\n")
+
+        print("ANTES: Usuario socia: " + str(self.socias.user_id.login))
+        print("\n")
+        try:
+            self.employee_without_image_2 = self.env['hr.employee'].create({
+            'name': 'Prueba',
+            'user_id': self.socias.user_id.id,
+            'image_1920': False,
+        })
+        except:
+            print("Ya existe ese inicio de sesión, entonces falla.")
+            print("\n")
+            var = True
+            return var
+
+
+    #test para comprobar que se pueden editar los datos de los empleados
+    def test_p_8_editar_datos_empleado(self):
+        print("OCTAVO TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES: Nombre empleado: " + str(self.employee_without_image_2[0].name))
+        print("\n")
+
+        self.employee_without_image_2_2 = self.employee_without_image_2[0].write({
+            'name': 'José María'
+        })
+        
+        print("DESPUES: Nombre empleado: " + str(self.employee_without_image_2[0].name))
+        print("\n")
+        var = self.assertEqual(self.employee_without_image_2[0].name, 'José María')
+        return var

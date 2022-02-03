@@ -61,6 +61,35 @@ class UsuarioSociaTestCase(TransactionCase):
             }
         ])
 
+        #Lo siguiente falla
+        '''cls.user = cls.env['res.users'].create({
+            'name': 'Prueba3',
+            'email': 'prueba3333@example.com',
+            'login': 'prueba_3',
+            'password': 'prueba_123',
+            'partner_id': cls.env['res.partner'].create({
+                'name': "Strawman Test User"
+            }).id
+        })
+
+        fecha_normal = datetime.date.today() - relativedelta(years=23)
+
+        cls.socias = cls.env['usuario.socia'].create(
+                {
+                    'tiene_dni': True, 
+                    'dni': "66727211S",
+                    'name': "Hola",
+                    'surnames': "Ejemplo Ejemplo",
+                    'birth_date': fecha_normal,
+                    'peso_actual': 65.0,
+                    'altura_actual': 1.75,
+                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'formas_de_pago': "transferencia",
+                    'objetivo': "Quiero ganar confianza en mí misma.",
+                    'user_id': cls.user.user_id.id
+                }
+            )'''
+
 
     #test donde la clienta es correcta
     def test_p_01_socia_correcta(self):
@@ -792,3 +821,33 @@ class UsuarioSociaTestCase(TransactionCase):
         var = self.assertEqual(2, len(self.socias[0].entrenamientos_socia_ids))
         return var
 
+    #test para comprobar que se pueden editar los datos de las socias
+    def test_p_22_editar_datos_socia(self):
+        print("VIGESIMO SEGUNDO TEST")
+        print("\n")
+        #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
+        print("ANTES:")
+        print("Nombre: " + str(self.socias[0].name))
+        print("Apellidos: " + str(self.socias[0].surnames))
+        print("Fecha nacimiento: " + str(self.socias[0].birth_date))
+        print("Edad: " + str(self.socias[0].edad))
+        print("\n")
+
+        self.socia_editada = self.socias[0].write({
+            'name': 'José María',
+            'surnames': 'Iglesias Bellido',
+            'birth_date': datetime.date.today() - relativedelta(years=58)
+        })
+        
+        print("DESPUES:")
+        print("Nombre: " + str(self.socias[0].name))
+        print("Apellidos: " + str(self.socias[0].surnames))
+        print("Fecha nacimiento: " + str(self.socias[0].birth_date))
+        print("Edad: " + str(self.socias[0].edad))
+        print("\n")
+        var1 = self.assertEqual(self.socias[0].name, 'José María')
+        var2 = self.assertEqual(self.socias[0].surnames, 'Iglesias Bellido')
+        var3 = self.assertEqual(self.socias[0].birth_date, datetime.date.today() - relativedelta(years=58))
+        var4 = self.assertEqual(self.socias[0].edad, 58)
+        res = var1 and (var2 and (var3 and (var4)))
+        return res
