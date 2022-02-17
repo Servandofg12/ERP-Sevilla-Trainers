@@ -217,6 +217,9 @@ class TestHrEmployee(TestHrCommon):
             ])
             return var
 
+
+    #TEST DE INICIO DE SESION ---------------------------------------------------------------------------------------------------------------
+
     #test para comprobar que no se puede crear otro empleado con el mismo usuario de inicio de sesión
     def test_p_5_crear_usuario_con_mismo_inicio_sesion(self):
         print("QUINTO TEST")
@@ -285,6 +288,7 @@ class TestHrEmployee(TestHrCommon):
             var = True
             return var
 
+    #TEST DE EDICION DE DATOS ---------------------------------------------------------------------------------------------------------------
 
     #test para comprobar que se pueden editar los datos de los empleados
     def test_p_8_editar_datos_empleado(self):

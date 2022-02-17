@@ -41,7 +41,7 @@ class Event(models.Model):
     # registration
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
     # website
-    website_published = fields.Boolean(tracking=True)
+    website_published = fields.Boolean()
     website_menu = fields.Boolean(
         string='Website Menu',
         compute='_compute_website_menu', readonly=False, store=True,
@@ -190,6 +190,24 @@ class Event(models.Model):
         for event in self:
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 event.website_url = '/event/%s' % slug(event)
+
+    #My onchange -------------------------------------------------
+
+    '''@api.onchange("stage_id")
+    def _onchange_stage_id(self):
+        print("ENTRAAAA AQUIIIII")
+        print(self.stage_id)
+        print(self.stage_id.name)
+        if self.stage_id.name == "Ended" or (self.stage_id.name == "Cancelled"):
+            print("VUELVEE A ENTRAAR")
+            self.website_published = False
+            print(self.name)
+            print(self.website_published)
+            return {'warning': {
+                'title': ("Info"),
+                'message': ('Va a despublicar este evento en la web.')}}'''
+
+    # ------------------------------------------------------------
 
     # ------------------------------------------------------------
     # CRUD

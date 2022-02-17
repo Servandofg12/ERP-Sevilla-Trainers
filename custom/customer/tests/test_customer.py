@@ -4,13 +4,13 @@ from odoo.tests import tagged
 import datetime
 from dateutil.relativedelta import relativedelta
 
-@tagged('socias')
-class UsuarioSociaTestCase(TransactionCase):
+@tagged('customer')
+class CustomerTestCase(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         # add env on cls and many other things
-        super(UsuarioSociaTestCase, cls).setUpClass()
+        super(CustomerTestCase, cls).setUpClass()
         print("\n")
         print("REALIZANDO SETUP DE TESTS DEL MODULO SOCIA")
         print("\n")
@@ -23,36 +23,36 @@ class UsuarioSociaTestCase(TransactionCase):
         fecha_estudiante = hoy - relativedelta(years=19)
         fecha_normal = hoy - relativedelta(years=23)
 
-        cls.socias = cls.env['usuario.socia'].create([
+        cls.socias = cls.env['customer.customer'].create([
             {
-                'tiene_dni': True, 
+                'have_dni': True, 
                 'dni': "66727272Z",
                 'name': "Hola",
                 'surnames': "Ejemplo Ejemplo",
                 'birth_date': fecha_normal,
-                'peso_actual': 70.0,
-                'altura_actual': 1.80,
-                'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                'formas_de_pago': "transferencia",
-                'objetivo': "Quiero ganar masa muscular"
+                'actual_weight': 70.0,
+                'actual_height': 1.80,
+                'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                'ways_to_pay': "transfer",
+                'goal': "Quiero ganar masa muscular"
             },
             {
-                'tiene_dni': True, 
+                'have_dni': True, 
                 'dni': "66727272A",
                 'name': "Hello",
                 'surnames': "Example Example",
                 'birth_date': fecha_estudiante,
-                'peso_actual': 70.0,
-                'altura_actual': 1.80,
-                'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                'formas_de_pago': "en_mano",
-                'objetivo': "Quiero ganar masa muscular",
-                'dada_alta': False,
-                'fecha_de_baja': hoy - relativedelta(months=2)
+                'actual_weight': 70.0,
+                'actual_height': 1.80,
+                'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                'ways_to_pay': "in_hand",
+                'goal': "Quiero ganar masa muscular",
+                'registered': False,
+                'unsubscribe_date': hoy - relativedelta(months=2)
             }
         ])
 
-        cls.maquinas =cls.env['maquinas.entrenamiento'].create([
+        cls.maquinas =cls.env['training.machine'].create([
             {
                 'name': "Sentadillas"
             },
@@ -74,18 +74,18 @@ class UsuarioSociaTestCase(TransactionCase):
 
         fecha_normal = datetime.date.today() - relativedelta(years=23)
 
-        cls.socias = cls.env['usuario.socia'].create(
+        cls.socias = cls.env['customer.customer'].create(
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "66727211S",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_normal,
-                    'peso_actual': 65.0,
-                    'altura_actual': 1.75,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar confianza en mí misma.",
+                    'actual_weight': 65.0,
+                    'actual_height': 1.75,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar confianza en mí misma.",
                     'user_id': cls.user.user_id.id
                 }
             )'''
@@ -99,105 +99,105 @@ class UsuarioSociaTestCase(TransactionCase):
         fecha_estudiante = hoy - relativedelta(years=19)
         fecha_normal = hoy - relativedelta(years=23)
 
-        self.socias = self.env['usuario.socia'].create([
+        self.socias = self.env['customer.customer'].create([
             {
-                'tiene_dni': True, 
+                'have_dni': True, 
                 'dni': "72727272Z",
                 'name': "Hola",
                 'surnames': "Ejemplo Ejemplo",
                 'birth_date': fecha_normal,
-                'peso_actual': 70.0,
-                'altura_actual': 1.80,
-                'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                'formas_de_pago': "transferencia",
-                'objetivo': "Quiero ganar masa muscular"
+                'actual_weight': 70.0,
+                'actual_height': 1.80,
+                'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                'ways_to_pay': "transfer",
+                'goal': "Quiero ganar masa muscular"
             },
             {
-                'tiene_dni': True, 
+                'have_dni': True, 
                 'dni': "72727272A",
                 'name': "Hello",
                 'surnames': "Example Example",
                 'birth_date': fecha_estudiante,
-                'peso_actual': 70.0,
-                'altura_actual': 1.80,
-                'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                'formas_de_pago': "en_mano",
-                'objetivo': "Quiero ganar masa muscular"
+                'actual_weight': 70.0,
+                'actual_height': 1.80,
+                'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                'ways_to_pay': "in_hand",
+                'goal': "Quiero ganar masa muscular"
             }
         ])
 
-        print("¿Dada de alta? " + str(self.socias[0].dada_alta))
+        print("¿Dada de alta? " + str(self.socias[0].registered))
         print("Nombre completo: " + str(self.socias[0].name) + " " + str(self.socias[0].surnames))
-        print("Edad: " + str(self.socias[0].edad))
-        print("Tipo de pase: " + str(self.socias[0].tipo_pase_temporada))
-        print("Coste del pase: " + str(self.socias[0].coste_pase))
+        print("Edad: " + str(self.socias[0].age))
+        print("Tipo de pase: " + str(self.socias[0].season_pass))
+        print("Coste del pase: " + str(self.socias[0].season_pass_cost))
         print("\n")
 
-        print("¿Dada de alta? " + str(self.socias[1].dada_alta))
+        print("¿Dada de alta? " + str(self.socias[1].registered))
         print("Nombre completo: " + str(self.socias[1].name) + " " + str(self.socias[0].surnames))
-        print("Edad: " + str(self.socias[1].edad))
-        print("Tipo de pase: " + str(self.socias[1].tipo_pase_temporada))
-        print("Coste del pase: " + str(self.socias[1].coste_pase))
+        print("Edad: " + str(self.socias[1].age))
+        print("Tipo de pase: " + str(self.socias[1].season_pass))
+        print("Coste del pase: " + str(self.socias[1].season_pass_cost))
         print("\n")
 
-        var = self.assertEqual(self.socias[0].dada_alta, True)
-        var2 = self.assertEqual(self.socias[1].dada_alta, True)
+        var = self.assertEqual(self.socias[0].registered, True)
+        var2 = self.assertEqual(self.socias[1].registered, True)
         result = var and var2
         return result
 
 
-    #test donde el nombre de la clienta no es correcto
+    #test donde el name de la clienta no es correcto
     def test_p_02_socia_nombre_con_mayusculas(self):
         print("\n")
         print("SEGUNDO TEST")
         hoy = datetime.date.today()
         fecha_estudiante = hoy - relativedelta(years=19)
-        self.socias = self.env['usuario.socia']
+        self.socias = self.env['customer.customer']
         try:
             self.socias.create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "HoLa",#falla aqui
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_estudiante,
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 }])
         except:
-            print("El nombre contiene mayusculas y falla al crear la socia")
+            print("El name contiene mayusculas y falla al crear la socia")
             print("\n")
             var = self.assertEqual(False, False)
             return var
 
         return False
 
-    #test donde el nombre de la clienta no es correcto
+    #test donde el name de la clienta no es correcto
     def test_p_03_socia_nombre_con_numero(self):
         print("\n")
         print("TERCER TEST")
         hoy = datetime.date.today()
         fecha_estudiante = hoy - relativedelta(years=19)
-        self.socias = self.env['usuario.socia']
+        self.socias = self.env['customer.customer']
         try:
             self.socias.create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "H9La",#falla aqui
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_estudiante,
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 }])
         except:
-            print("El nombre contiene un numero y falla al crear la socia")
+            print("El name contiene un numero y falla al crear la socia")
             print("\n")
             var = self.assertEqual(False, False)
             return var
@@ -211,20 +211,20 @@ class UsuarioSociaTestCase(TransactionCase):
         print("CUARTO TEST")
         hoy = datetime.date.today()
         fecha_estudiante = hoy - relativedelta(years=19)
-        self.socias = self.env['usuario.socia']
+        self.socias = self.env['customer.customer']
         try:
             self.socias.create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "Hola",
                     'surnames': "EjemPlo EjemPlo",#falla aqui
                     'birth_date': fecha_estudiante,
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 }])
         except:
             print("Los apellidos contienen más de una mayuscula y falla al crear la socia")
@@ -240,20 +240,20 @@ class UsuarioSociaTestCase(TransactionCase):
         print("QUINTO TEST")
         hoy = datetime.date.today()
         fecha_estudiante = hoy - relativedelta(years=19)
-        self.socias = self.env['usuario.socia']
+        self.socias = self.env['customer.customer']
         try:
             self.socias.create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "Hola",
                     'surnames': "Ejemplo 2Ejemplo",#falla aqui
                     'birth_date': fecha_estudiante,
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 }])
         except:
             print("Los apellidos contienen un numero y falla al crear la socia")
@@ -271,25 +271,25 @@ class UsuarioSociaTestCase(TransactionCase):
         hoy = datetime.date.today()
         fecha_nac = hoy - relativedelta(years=10)
         #print("Fecha nac: "+ str(fecha_nac))
-        self.socias = self.env['usuario.socia']
+        self.socias = self.env['customer.customer']
         try:
             var = self.assertEqual(False, True)
             self.socias.create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_nac,#falla aqui
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 }])
             return var
         except:
-            print("La edad es menor a 14 años y falla al crear la socia")
+            print("La age es menor a 14 años y falla al crear la socia")
             print("\n")
             var = self.assertEqual(False, False)
             return var
@@ -303,20 +303,20 @@ class UsuarioSociaTestCase(TransactionCase):
         print("SEPTIMO TEST")
         hoy = datetime.date.today()
         fecha_nac = hoy - relativedelta(years=19)
-        self.socias = self.env['usuario.socia']
+        self.socias = self.env['customer.customer']
         try:
             self.socias.create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_nac,
-                    'peso_actual': -200.0,#falla aqui
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': -200.0,#falla aqui
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 }])
         except:
             print("El peso no puede ser negativo y falla al crear la socia")
@@ -334,20 +334,20 @@ class UsuarioSociaTestCase(TransactionCase):
         print("OCTAVO TEST")
         hoy = datetime.date.today()
         fecha_nac = hoy - relativedelta(years=19)
-        self.socias = self.env['usuario.socia']
+        self.socias = self.env['customer.customer']
         try:
             self.socias.create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_nac,
-                    'peso_actual': 70.0,
-                    'altura_actual': -1.80,#falla aqui
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': -1.80,#falla aqui
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 }])
         except:
             print("La altura no puede ser negativa y falla al crear la socia")
@@ -364,20 +364,20 @@ class UsuarioSociaTestCase(TransactionCase):
         print("NOVENO TEST")
         hoy = datetime.date.today()
         fecha_nac = hoy + relativedelta(years=1)
-        self.socias = self.env['usuario.socia']
+        self.socias = self.env['customer.customer']
         try:
             self.socias.create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_nac,#falla aqui
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 }])
         except:
             print("El año no puede ser futuro y falla al crear la socia")
@@ -398,30 +398,30 @@ class UsuarioSociaTestCase(TransactionCase):
         fecha_normal = hoy - relativedelta(years=23)
 
         try:
-            self.socias = self.env['usuario.socia'].create([
+            self.socias = self.env['customer.customer'].create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_normal,
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 },
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "72727272Z",
                     'name': "Hello",
                     'surnames': "Example Example",
                     'birth_date': fecha_estudiante,
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "en_mano",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "in_hand",
+                    'goal': "Quiero ganar masa muscular"
                 }
             ])
         except:
@@ -443,30 +443,30 @@ class UsuarioSociaTestCase(TransactionCase):
         fecha_normal = hoy - relativedelta(years=23)
 
         try:
-            self.socias = self.env['usuario.socia'].create([
+            self.socias = self.env['customer.customer'].create([
                 {
-                    'tiene_dni': False, 
+                    'have_dni': False, 
                     'nie': "72727272Z",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_normal,
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar masa muscular"
                 },
                 {
-                    'tiene_dni': False, 
+                    'have_dni': False, 
                     'nie': "72727272Z",
                     'name': "Hello",
                     'surnames': "Example Example",
                     'birth_date': fecha_estudiante,
-                    'peso_actual': 70.0,
-                    'altura_actual': 1.80,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "en_mano",
-                    'objetivo': "Quiero ganar masa muscular"
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "in_hand",
+                    'goal': "Quiero ganar masa muscular"
                 }
             ])
         except:
@@ -485,14 +485,14 @@ class UsuarioSociaTestCase(TransactionCase):
         print("DECIMO SEGUNDO TEST")
         print("\n")
         #Solo el segundo esta dado de baja ([1]), por lo tanto, el primero ([0]) esta dado de alta.
-        print("ANTES: Dada de alta: " + str(self.socias[1].dada_alta) + " - Fecha de baja: " + str(self.socias[1].fecha_de_baja))
+        print("ANTES: Dada de alta: " + str(self.socias[1].registered) + " - Fecha de baja: " + str(self.socias[1].unsubscribe_date))
         print("\n")
-        self.socias[1].action_dar_de_alta()
-        print("DESPUES: Dada de alta: " + str(self.socias[1].dada_alta) + " - Fecha de alta: " + str(self.socias[1].fecha_de_alta))
+        self.socias[1].action_register()
+        print("DESPUES: Dada de alta: " + str(self.socias[1].registered) + " - Fecha de alta: " + str(self.socias[1].register_date))
         print("\n")
         var = self.assertRecordValues(self.socias,[
-            {'name': 'Hola', 'dada_alta': True},
-            {'name': 'Hello', 'dada_alta': True}
+            {'name': 'Hola', 'registered': True},
+            {'name': 'Hello', 'registered': True}
         ])
 
         return var
@@ -502,23 +502,23 @@ class UsuarioSociaTestCase(TransactionCase):
         print("DECIMO TERCER TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Dada de alta: " + str(self.socias[0].dada_alta) + " - Fecha de baja: " + str(self.socias[0].fecha_de_baja))
+        print("ANTES: Dada de alta: " + str(self.socias[0].registered) + " - Fecha de baja: " + str(self.socias[0].unsubscribe_date))
         print("\n")
         try:
-            self.socias[0].action_dar_de_alta()
-            print("DESPUES: Dada de alta: " + str(self.socias[0].dada_alta) + " - Fecha de alta: " + str(self.socias[0].fecha_de_alta))
+            self.socias[0].action_register()
+            print("DESPUES: Dada de alta: " + str(self.socias[0].registered) + " - Fecha de alta: " + str(self.socias[0].register_date))
             print("\n")
             var = self.assertRecordValues(self.socias,[
-                {'name': 'Hola', 'dada_alta': True},
-                {'name': 'Hello', 'dada_alta': False}
+                {'name': 'Hola', 'registered': True},
+                {'name': 'Hello', 'registered': False}
             ])
             return var
         except:
             print("Ya estaba dada de alta por lo que salta la exception UserError")
             print("\n")
             var = self.assertRecordValues(self.socias,[
-                {'name': 'Hola', 'dada_alta': True},
-                {'name': 'Hello', 'dada_alta': False}
+                {'name': 'Hola', 'registered': True},
+                {'name': 'Hello', 'registered': False}
             ])
             return var
 
@@ -528,16 +528,16 @@ class UsuarioSociaTestCase(TransactionCase):
         print("DECIMO CUARTO TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Dada de alta: " + str(self.socias[0].dada_alta) + " - Fecha de baja: " + str(self.socias[0].fecha_de_baja))
+        print("ANTES: Dada de alta: " + str(self.socias[0].registered) + " - Fecha de baja: " + str(self.socias[0].unsubscribe_date))
         print("\n")
 
-        self.socias[0].action_dar_de_baja()
+        self.socias[0].action_unsubscribe()
 
-        print("DESPUES: Dada de alta: " + str(self.socias[0].dada_alta) + " - Fecha de baja: " + str(self.socias[0].fecha_de_baja))
+        print("DESPUES: Dada de alta: " + str(self.socias[0].registered) + " - Fecha de baja: " + str(self.socias[0].unsubscribe_date))
         print("\n")
         var = self.assertRecordValues(self.socias,[
-                {'name': 'Hola', 'dada_alta': False},
-                {'name': 'Hello', 'dada_alta': False}
+                {'name': 'Hola', 'registered': False},
+                {'name': 'Hello', 'registered': False}
                 ])
         return var
 
@@ -547,23 +547,23 @@ class UsuarioSociaTestCase(TransactionCase):
         print("DECIMO QUINTO TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Dada de alta: " + str(self.socias[1].dada_alta) + " - Fecha de baja: " + str(self.socias[1].fecha_de_baja))
+        print("ANTES: Dada de alta: " + str(self.socias[1].registered) + " - Fecha de baja: " + str(self.socias[1].unsubscribe_date))
         print("\n")
         try:
-            self.socias[1].action_dar_de_baja()
-            print("DESPUES: Dada de alta: " + str(self.socias[1].dada_alta) + " - Fecha de baja: " + str(self.socias[1].fecha_de_baja))
+            self.socias[1].action_unsubscribe()
+            print("DESPUES: Dada de alta: " + str(self.socias[1].registered) + " - Fecha de baja: " + str(self.socias[1].unsubscribe_date))
             print("\n")
             var = self.assertRecordValues(self.socias,[
-                {'name': 'Hola', 'dada_alta': True},
-                {'name': 'Hello', 'dada_alta': False}
+                {'name': 'Hola', 'registered': True},
+                {'name': 'Hello', 'registered': False}
             ])
             return var
         except:
             print("Ya estaba dada de baja por lo que salta la exception UserError")
             print("\n")
             var = self.assertRecordValues(self.socias,[
-                {'name': 'Hola', 'dada_alta': True},
-                {'name': 'Hello', 'dada_alta': False}
+                {'name': 'Hola', 'registered': True},
+                {'name': 'Hello', 'registered': False}
             ])
             return var
 
@@ -575,33 +575,33 @@ class UsuarioSociaTestCase(TransactionCase):
         print("DECIMO SEXTO TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
-        print("Peso de la socia: " + str(self.socias[0].peso_actual))
-        print("Altura de la socia: " + str(self.socias[0].altura_actual))
+        print("ANTES: Número de revisiones: " + str(len(self.socias[0].monthly_review_ids)))
+        print("Peso de la socia: " + str(self.socias[0].actual_weight))
+        print("Altura de la socia: " + str(self.socias[0].actual_height))
         print("\n")
-        self.revision = self.env['revision.mensual']
+        self.revision = self.env['monthly.review']
         self.revision.create([
                 {
-                    'nuevo_peso': 90.0,
-                    'nueva_altura': 1.78,
-                    'porcentaje_grasa_corporal': 15,
-                    'indice_masa_corporal': 13,
-                    'medida_pecho': 30,
-                    'medida_cintura': 35,
-                    'medida_abdomen': 30,
-                    'medida_caderas': 35,
-                    'medida_muslos': 20,
-                    'medida_brazos': 15,
-                    'fecha_realizada': datetime.date.today(),
-                    'usuario_socia_id': self.socias[0].id
+                    'new_weight': 90.0,
+                    'new_height': 1.78,
+                    'body_fat_percentage': 15,
+                    'body_mass_index': 13,
+                    'chest_measurement': 30,
+                    'weist_measurement': 35,
+                    'abdomen_measure': 30,
+                    'hips_measure': 35,
+                    'thighs_measure': 20,
+                    'arms_measure': 15,
+                    'date_made': datetime.date.today(),
+                    'customer_id': self.socias[0].id
                 }])
 
-        print("DESPUES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
-        print("Peso de la socia: " + str(self.socias[0].peso_actual))
-        print("Altura de la socia: " + str(self.socias[0].altura_actual))
+        print("DESPUES: Número de revisiones: " + str(len(self.socias[0].monthly_review_ids)))
+        print("Peso de la socia: " + str(self.socias[0].actual_weight))
+        print("Altura de la socia: " + str(self.socias[0].actual_height))
         print("\n")
 
-        var = self.assertEqual(1, len(self.socias[0].revision_mensual_ids))
+        var = self.assertEqual(1, len(self.socias[0].monthly_review_ids))
         return var
 
     #test para comprobar que no se pueden crear 2 en el mismo mes
@@ -609,51 +609,51 @@ class UsuarioSociaTestCase(TransactionCase):
         print("DECIMO SEPTIMO TEST")
         print("\n")
 
-        self.revision = self.env['revision.mensual']
+        self.revision = self.env['monthly.review']
         self.revision.create([
                 {
-                    'nuevo_peso': 90.0,
-                    'nueva_altura': 1.78,
-                    'porcentaje_grasa_corporal': 15,
-                    'indice_masa_corporal': 13,
-                    'medida_pecho': 30,
-                    'medida_cintura': 35,
-                    'medida_abdomen': 30,
-                    'medida_caderas': 35,
-                    'medida_muslos': 20,
-                    'medida_brazos': 15,
-                    'fecha_realizada': datetime.date.today(),
-                    'usuario_socia_id': self.socias[0].id
+                    'new_weight': 90.0,
+                    'new_height': 1.78,
+                    'body_fat_percentage': 15,
+                    'body_mass_index': 13,
+                    'chest_measurement': 30,
+                    'weist_measurement': 35,
+                    'abdomen_measure': 30,
+                    'hips_measure': 35,
+                    'thighs_measure': 20,
+                    'arms_measure': 15,
+                    'date_made': datetime.date.today(),
+                    'customer_id': self.socias[0].id
                 }])
 
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("ANTES: Número de revisiones: " + str(len(self.socias[0].monthly_review_ids)))
         print("\n")
 
         try:
             print("Intentando añadir otra revisión con la misma fecha...")
-            self.revision_falla = self.env['revision.mensual']
+            self.revision_falla = self.env['monthly.review']
             self.revision_falla.create([
                 {
-                    'nuevo_peso': 90.0,
-                    'nueva_altura': 1.78,
-                    'porcentaje_grasa_corporal': 15,
-                    'indice_masa_corporal': 13,
-                    'medida_pecho': 30,
-                    'medida_cintura': 35,
-                    'medida_abdomen': 30,
-                    'medida_caderas': 35,
-                    'medida_muslos': 20,
-                    'medida_brazos': 15,
-                    'fecha_realizada': datetime.date.today(),
-                    'usuario_socia_id': self.socias[0].id
+                    'new_weight': 90.0,
+                    'new_height': 1.78,
+                    'body_fat_percentage': 15,
+                    'body_mass_index': 13,
+                    'chest_measurement': 30,
+                    'weist_measurement': 35,
+                    'abdomen_measure': 30,
+                    'hips_measure': 35,
+                    'thighs_measure': 20,
+                    'arms_measure': 15,
+                    'date_made': datetime.date.today(),
+                    'customer_id': self.socias[0].id
                 }])
         except:
             print("Falla porque se debe esperar un mes para poder hacer otra revisión.")
-            print("DESPUES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+            print("DESPUES: Número de revisiones: " + str(len(self.socias[0].monthly_review_ids)))
             print("\n")
 
-            var = self.assertEqual(1, len(self.socias[0].revision_mensual_ids))
+            var = self.assertEqual(1, len(self.socias[0].monthly_review_ids))
             return var
         
     #test para comprobar que no se pueden crear 2 en el mismo mes
@@ -661,51 +661,51 @@ class UsuarioSociaTestCase(TransactionCase):
         print("DECIMO OCTAVO TEST")
         print("\n")
 
-        self.revision = self.env['revision.mensual']
+        self.revision = self.env['monthly.review']
         self.revision.create([
                 {
-                    'nuevo_peso': 90.0,
-                    'nueva_altura': 1.78,
-                    'porcentaje_grasa_corporal': 15,
-                    'indice_masa_corporal': 13,
-                    'medida_pecho': 30,
-                    'medida_cintura': 35,
-                    'medida_abdomen': 30,
-                    'medida_caderas': 35,
-                    'medida_muslos': 20,
-                    'medida_brazos': 15,
-                    'fecha_realizada': datetime.date.today(),
-                    'usuario_socia_id': self.socias[0].id
+                    'new_weight': 90.0,
+                    'new_height': 1.78,
+                    'body_fat_percentage': 15,
+                    'body_mass_index': 13,
+                    'chest_measurement': 30,
+                    'weist_measurement': 35,
+                    'abdomen_measure': 30,
+                    'hips_measure': 35,
+                    'thighs_measure': 20,
+                    'arms_measure': 15,
+                    'date_made': datetime.date.today(),
+                    'customer_id': self.socias[0].id
                 }])
 
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("ANTES: Número de revisiones: " + str(len(self.socias[0].monthly_review_ids)))
         print("\n")
 
         try:
             print("Intentando añadir otra revisión con la misma fecha...")
-            self.revision_falla = self.env['revision.mensual']
+            self.revision_falla = self.env['monthly.review']
             self.revision_falla.create([
                 {
-                    'nuevo_peso': 90.0,
-                    'nueva_altura': 1.78,
-                    'porcentaje_grasa_corporal': 15,
-                    'indice_masa_corporal': 13,
-                    'medida_pecho': 30,
-                    'medida_cintura': 35,
-                    'medida_abdomen': 30,
-                    'medida_caderas': 35,
-                    'medida_muslos': 20,
-                    'medida_brazos': 15,
-                    'fecha_realizada': datetime.date.today() + relativedelta(months=1) - relativedelta(days=1),
-                    'usuario_socia_id': self.socias[0].id
+                    'new_weight': 90.0,
+                    'new_height': 1.78,
+                    'body_fat_percentage': 15,
+                    'body_mass_index': 13,
+                    'chest_measurement': 30,
+                    'weist_measurement': 35,
+                    'abdomen_measure': 30,
+                    'hips_measure': 35,
+                    'thighs_measure': 20,
+                    'arms_measure': 15,
+                    'date_made': datetime.date.today() + relativedelta(months=1) - relativedelta(days=1),
+                    'customer_id': self.socias[0].id
                 }])
         except:
             print("Falla porque se debe esperar un mes para poder hacer otra revisión.")
-            print("DESPUES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+            print("DESPUES: Número de revisiones: " + str(len(self.socias[0].monthly_review_ids)))
             print("\n")
 
-            var = self.assertEqual(1, len(self.socias[0].revision_mensual_ids))
+            var = self.assertEqual(1, len(self.socias[0].monthly_review_ids))
             return var
 
     #test para comprobar que se pueden crear 2 en distinto mes
@@ -713,51 +713,51 @@ class UsuarioSociaTestCase(TransactionCase):
         print("DECIMO NOVENO TEST")
         print("\n")
 
-        print("ANTES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("ANTES: Número de revisiones: " + str(len(self.socias[0].monthly_review_ids)))
         print("\n")
 
-        self.revision = self.env['revision.mensual']
+        self.revision = self.env['monthly.review']
         self.revision.create([
                 {
-                    'nuevo_peso': 90.0,
-                    'nueva_altura': 1.78,
-                    'porcentaje_grasa_corporal': 15,
-                    'indice_masa_corporal': 13,
-                    'medida_pecho': 30,
-                    'medida_cintura': 35,
-                    'medida_abdomen': 30,
-                    'medida_caderas': 35,
-                    'medida_muslos': 20,
-                    'medida_brazos': 15,
-                    'fecha_realizada': datetime.date.today() - relativedelta(months=1),
-                    'usuario_socia_id': self.socias[0].id
+                    'new_weight': 90.0,
+                    'new_height': 1.78,
+                    'body_fat_percentage': 15,
+                    'body_mass_index': 13,
+                    'chest_measurement': 30,
+                    'weist_measurement': 35,
+                    'abdomen_measure': 30,
+                    'hips_measure': 35,
+                    'thighs_measure': 20,
+                    'arms_measure': 15,
+                    'date_made': datetime.date.today() - relativedelta(months=1),
+                    'customer_id': self.socias[0].id
                 }])
 
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("DESPUES de una revision: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("DESPUES de una revision: Número de revisiones: " + str(len(self.socias[0].monthly_review_ids)))
         print("\n")
         
-        self.revision_falla = self.env['revision.mensual']
+        self.revision_falla = self.env['monthly.review']
         self.revision_falla.create([
                 {
-                    'nuevo_peso': 90.0,
-                    'nueva_altura': 1.78,
-                    'porcentaje_grasa_corporal': 15,
-                    'indice_masa_corporal': 13,
-                    'medida_pecho': 30,
-                    'medida_cintura': 35,
-                    'medida_abdomen': 30,
-                    'medida_caderas': 35,
-                    'medida_muslos': 20,
-                    'medida_brazos': 15,
-                    'fecha_realizada': datetime.date.today(),
-                    'usuario_socia_id': self.socias[0].id
+                    'new_weight': 90.0,
+                    'new_height': 1.78,
+                    'body_fat_percentage': 15,
+                    'body_mass_index': 13,
+                    'chest_measurement': 30,
+                    'weist_measurement': 35,
+                    'abdomen_measure': 30,
+                    'hips_measure': 35,
+                    'thighs_measure': 20,
+                    'arms_measure': 15,
+                    'date_made': datetime.date.today(),
+                    'customer_id': self.socias[0].id
                 }])
 
-        print("DESPUES: Número de revisiones: " + str(len(self.socias[0].revision_mensual_ids)))
+        print("DESPUES: Número de revisiones: " + str(len(self.socias[0].monthly_review_ids)))
         print("\n")
 
-        var = self.assertEqual(2, len(self.socias[0].revision_mensual_ids))
+        var = self.assertEqual(2, len(self.socias[0].monthly_review_ids))
         return var
 
     
@@ -768,24 +768,24 @@ class UsuarioSociaTestCase(TransactionCase):
         print("VIGESIMO TEST")
         print("\n")
 
-        print("ANTES: Número de entrenamientos: " + str(len(self.socias[0].entrenamientos_socia_ids)))
+        print("ANTES: Número de entrenamientos: " + str(len(self.socias[0].customer_training_ids)))
         print("\n")
 
-        self.entrenamiento = self.env['entrenamiento.socia']
+        self.entrenamiento = self.env['customer.training']
         self.entrenamiento.create([
                 {
-                    'nombre': "Mi entrenamiento",
-                    'num_vueltas': 1,
-                    'usa_maquinas': True,
-                    'maquinas_entrenamiento_ids': self.maquinas[0],
-                    'usuario_socia_id': self.socias[0].id
+                    'name': "Mi entrenamiento",
+                    'numb_turns': 1,
+                    'machine_use': True,
+                    'training_machine_ids': self.maquinas[0],
+                    'customer_id': self.socias[0].id
                 }])
 
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("DESPUES: Número de entrenamientos: " + str(len(self.socias[0].entrenamientos_socia_ids)))
+        print("DESPUES: Número de entrenamientos: " + str(len(self.socias[0].customer_training_ids)))
         print("\n")
 
-        var = self.assertEqual(1, len(self.socias[0].entrenamientos_socia_ids))
+        var = self.assertEqual(1, len(self.socias[0].customer_training_ids))
         return var
 
     #test para comprobar que se pueden crear 2 entrenamientos
@@ -793,33 +793,35 @@ class UsuarioSociaTestCase(TransactionCase):
         print("VIGESIMO PRIMER TEST")
         print("\n")
 
-        print("ANTES: Número de entrenamientos: " + str(len(self.socias[0].entrenamientos_socia_ids)))
+        print("ANTES: Número de entrenamientos: " + str(len(self.socias[0].customer_training_ids)))
         print("\n")
 
-        self.entrenamiento = self.env['entrenamiento.socia']
+        self.entrenamiento = self.env['customer.training']
         self.entrenamiento.create([
                 {
-                    'nombre': "Mi entrenamiento",
-                    'num_vueltas': 1,
-                    'usa_maquinas': True,
-                    'maquinas_entrenamiento_ids': self.maquinas[0],
-                    'usuario_socia_id': self.socias[0].id
+                    'name': "Mi entrenamiento",
+                    'numb_turns': 1,
+                    'machine_use': True,
+                    'training_machine_ids': self.maquinas[0],
+                    'customer_id': self.socias[0].id
                 },
                 {
-                    'nombre': "Mi entrenamiento 2",
-                    'num_vueltas': 2,
-                    'usa_maquinas': True,
-                    'maquinas_entrenamiento_ids': [self.maquinas[0].id, self.maquinas[1].id],
-                    'usuario_socia_id': self.socias[0].id
+                    'name': "Mi entrenamiento 2",
+                    'numb_turns': 2,
+                    'machine_use': True,
+                    'training_machine_ids': [self.maquinas[0].id, self.maquinas[1].id],
+                    'customer_id': self.socias[0].id
                 }
                 ])
 
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("DESPUES: Número de entrenamientos: " + str(len(self.socias[0].entrenamientos_socia_ids)))
+        print("DESPUES: Número de entrenamientos: " + str(len(self.socias[0].customer_training_ids)))
         print("\n")
 
-        var = self.assertEqual(2, len(self.socias[0].entrenamientos_socia_ids))
+        var = self.assertEqual(2, len(self.socias[0].customer_training_ids))
         return var
+    
+    #TEST DE EDICION DE DATOS ---------------------------------------------------------------------------------------------------------------
 
     #test para comprobar que se pueden editar los datos de las socias
     def test_p_22_editar_datos_socia(self):
@@ -830,7 +832,7 @@ class UsuarioSociaTestCase(TransactionCase):
         print("Nombre: " + str(self.socias[0].name))
         print("Apellidos: " + str(self.socias[0].surnames))
         print("Fecha nacimiento: " + str(self.socias[0].birth_date))
-        print("Edad: " + str(self.socias[0].edad))
+        print("Edad: " + str(self.socias[0].age))
         print("\n")
 
         self.socia_editada = self.socias[0].write({
@@ -843,11 +845,11 @@ class UsuarioSociaTestCase(TransactionCase):
         print("Nombre: " + str(self.socias[0].name))
         print("Apellidos: " + str(self.socias[0].surnames))
         print("Fecha nacimiento: " + str(self.socias[0].birth_date))
-        print("Edad: " + str(self.socias[0].edad))
+        print("Edad: " + str(self.socias[0].age))
         print("\n")
         var1 = self.assertEqual(self.socias[0].name, 'José María')
         var2 = self.assertEqual(self.socias[0].surnames, 'Iglesias Bellido')
         var3 = self.assertEqual(self.socias[0].birth_date, datetime.date.today() - relativedelta(years=58))
-        var4 = self.assertEqual(self.socias[0].edad, 58)
+        var4 = self.assertEqual(self.socias[0].age, 58)
         res = var1 and (var2 and (var3 and (var4)))
         return res
