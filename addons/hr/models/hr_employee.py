@@ -31,11 +31,11 @@ class HrEmployeePrivate(models.Model):
     _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
 
-    #Atributos añadidos por mi ---------------------------------------------------------------------------------------------------------
+    #Atributes made by me ---------------------------------------------------------------------------------------------------------
 
-    dada_alta = fields.Boolean(default=True, groups="hr.group_hr_user")
-    fecha_de_alta = fields.Date(default=date.today(), groups="hr.group_hr_user")
-    fecha_de_baja = fields.Date(groups="hr.group_hr_user")
+    registered = fields.Boolean(default=True, groups="hr.group_hr_user")
+    register_date = fields.Date(default=date.today(), groups="hr.group_hr_user")
+    unsubscribe_date = fields.Date(groups="hr.group_hr_user")
 
     #-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -263,15 +263,15 @@ class HrEmployeePrivate(models.Model):
     @api.constrains("user_id")
     def _check_user_id(self):
         for record in self:
-            usuario = record.user_id
+            user = record.user_id
 
-            if usuario:
+            if user:
 
-                self._cr.execute('select count(*) from usuario_socia where user_id = %s', (usuario.id,))
+                self._cr.execute('select count(*) from usuario_socia where user_id = %s', (user.id,))
                 data = self._cr.dictfetchall()
 
                 if data[0]['count'] > 0:
-                    raise ValidationError("Este usuario ya pertenece a otra persona. Por favor, escriba otro distinto.")
+                    raise ValidationError("This user is from other person. Please write or try another one.")
 
     #-----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -492,22 +492,22 @@ class HrEmployeePrivate(models.Model):
     
     #My Actions-------------------------------------------------------------------------------------------------------------
 
-    def action_dar_de_alta(self):
+    def action_register(self):
         for record in self:
-            if record.dada_alta == True:
-                raise exceptions.UserError("Ya está dada de alta")
+            if record.registered == True:
+                raise exceptions.UserError("She/He is already registered.")
             else:
-                record.dada_alta = True
-                record.fecha_de_alta = date.today()
-                record.fecha_de_baja = None
+                record.registered = True
+                record.register_date = date.today()
+                record.unsubscribe_date = None
         return True
 
-    def action_dar_de_baja(self):
+    def action_unsubscribe(self):
         for record in self:
-            if record.dada_alta == False:
-                raise exceptions.UserError("Ya está dada de baja")
+            if record.registered == False:
+                raise exceptions.UserError("She/He is already unsubscribed.")
             else:
-                record.dada_alta = False
-                record.fecha_de_baja = date.today()
+                record.registered = False
+                record.unsubscribe_date = date.today()
         return True
 

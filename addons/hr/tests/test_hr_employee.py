@@ -7,7 +7,7 @@ from odoo.tests import tagged
 import datetime
 from dateutil.relativedelta import relativedelta
 
-@tagged('empleados')
+@tagged('employee')
 class TestHrEmployee(TestHrCommon):
 
     def setUp(self):
@@ -51,24 +51,24 @@ class TestHrEmployee(TestHrCommon):
         },{
             'user_id': self.user_without_image_2[1].id,
             'image_1920': False,
-            'dada_alta': False,
-            'fecha_de_baja': datetime.date.today() - relativedelta(months=2)
+            'registered': False,
+            'unsubscribe_date': datetime.date.today() - relativedelta(months=2)
         }])
 
         fecha_normal = datetime.date.today() - relativedelta(years=23)
 
-        self.socias = self.env['usuario.socia'].create(
+        self.socias = self.env['customer.customer'].create(
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "66727211S",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_normal,
-                    'peso_actual': 65.0,
-                    'altura_actual': 1.75,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar confianza en mí misma.",
+                    'actual_weight': 65.0,
+                    'actual_height': 1.75,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar confianza en mí misma.",
                     'user_id': self.user_without_image_2[2].id
                 }
             )
@@ -135,14 +135,14 @@ class TestHrEmployee(TestHrCommon):
         print("PRIMER TEST")
         print("\n")
         #Solo el segundo esta dado de baja ([1]), por lo tanto, el primero ([0]) esta dado de alta.
-        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[1].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[1].fecha_de_baja))
+        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[1].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[1].unsubscribe_date))
         print("\n")
-        self.employee_without_image_2[1].action_dar_de_alta()
-        print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[1].dada_alta) + " - Fecha de alta: " + str(self.employee_without_image_2[1].fecha_de_alta))
+        self.employee_without_image_2[1].action_register()
+        print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[1].registered) + " - Fecha de alta: " + str(self.employee_without_image_2[1].register_date))
         print("\n")
         var = self.assertRecordValues(self.employee_without_image_2,[
-            {'name': 'Prueba', 'dada_alta': True},
-            {'name': 'Prueba2', 'dada_alta': True}
+            {'name': 'Prueba', 'registered': True},
+            {'name': 'Prueba2', 'registered': True}
         ])
 
         return var
@@ -152,23 +152,23 @@ class TestHrEmployee(TestHrCommon):
         print("SEGUNDO TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[0].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[0].fecha_de_baja))
+        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[0].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[0].unsubscribe_date))
         print("\n")
         try:
-            self.employee_without_image_2[0].action_dar_de_alta()
-            print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[0].dada_alta) + " - Fecha de alta: " + str(self.employee_without_image_2[0].fecha_de_alta))
+            self.employee_without_image_2[0].action_register()
+            print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[0].registered) + " - Fecha de alta: " + str(self.employee_without_image_2[0].register_date))
             print("\n")
             var = self.assertRecordValues(self.employee_without_image_2,[
-                {'name': 'Prueba', 'dada_alta': True},
-                {'name': 'Prueba2', 'dada_alta': False}
+                {'name': 'Prueba', 'registered': True},
+                {'name': 'Prueba2', 'registered': False}
             ])
             return var
         except:
             print("Ya estaba dada de alta por lo que salta la exception UserError")
             print("\n")
             var = self.assertRecordValues(self.employee_without_image_2,[
-                {'name': 'Prueba', 'dada_alta': True},
-                {'name': 'Prueba2', 'dada_alta': False}
+                {'name': 'Prueba', 'registered': True},
+                {'name': 'Prueba2', 'registered': False}
             ])
             return var
 
@@ -178,16 +178,16 @@ class TestHrEmployee(TestHrCommon):
         print("TERCER TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[0].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[0].fecha_de_baja))
+        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[0].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[0].unsubscribe_date))
         print("\n")
 
-        self.employee_without_image_2[0].action_dar_de_baja()
+        self.employee_without_image_2[0].action_unsubscribe()
 
-        print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[0].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[0].fecha_de_baja))
+        print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[0].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[0].unsubscribe_date))
         print("\n")
         var = self.assertRecordValues(self.employee_without_image_2,[
-                {'name': 'Prueba', 'dada_alta': False},
-                {'name': 'Prueba2', 'dada_alta': False}
+                {'name': 'Prueba', 'registered': False},
+                {'name': 'Prueba2', 'registered': False}
                 ])
         return var
 
@@ -197,23 +197,23 @@ class TestHrEmployee(TestHrCommon):
         print("CUARTO TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[1].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[1].fecha_de_baja))
+        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[1].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[1].unsubscribe_date))
         print("\n")
         try:
-            self.employee_without_image_2[1].action_dar_de_baja()
-            print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[1].dada_alta) + " - Fecha de baja: " + str(self.employee_without_image_2[1].fecha_de_baja))
+            self.employee_without_image_2[1].action_unsubscribe()
+            print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[1].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[1].unsubscribe_date))
             print("\n")
             var = self.assertRecordValues(self.employee_without_image_2,[
-                {'name': 'Prueba', 'dada_alta': True},
-                {'name': 'Prueba2', 'dada_alta': False}
+                {'name': 'Prueba', 'registered': True},
+                {'name': 'Prueba2', 'registered': False}
             ])
             return var
         except:
             print("Ya estaba dada de baja por lo que salta la exception UserError")
             print("\n")
             var = self.assertRecordValues(self.employee_without_image_2,[
-                {'name': 'Prueba', 'dada_alta': True},
-                {'name': 'Prueba2', 'dada_alta': False}
+                {'name': 'Prueba', 'registered': True},
+                {'name': 'Prueba2', 'registered': False}
             ])
             return var
 
@@ -248,18 +248,18 @@ class TestHrEmployee(TestHrCommon):
         try:
             fecha_normal = datetime.date.today() - relativedelta(years=23)
 
-            self.socias = self.env['usuario.socia'].create([
+            self.socias = self.env['customer.customer'].create([
                 {
-                    'tiene_dni': True, 
+                    'have_dni': True, 
                     'dni': "66727211S",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
                     'birth_date': fecha_normal,
-                    'peso_actual': 65.0,
-                    'altura_actual': 1.75,
-                    'direccion': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
-                    'formas_de_pago': "transferencia",
-                    'objetivo': "Quiero ganar confianza en mí misma.",
+                    'actual_weight': 65.0,
+                    'actual_height': 1.75,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "Quiero ganar confianza en mí misma.",
                     'user_id': self.employee_without_image_2[0].user_id.id
                 }
             ])

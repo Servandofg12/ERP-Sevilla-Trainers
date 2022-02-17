@@ -50,9 +50,9 @@
                         <!-- <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_manager"/> -->
 
                         <!-- Botones de dar de alta y de baja -->
-                        <field name="dada_alta" invisible="True"/>
-                        <button name="action_dar_de_alta" type="object" string="Dar de alta" attrs="{'invisible':[('dada_alta', '==', True)]}"/>
-                        <button name="action_dar_de_baja" type="object" string="Dar de baja" attrs="{'invisible':[('dada_alta', '==', False)]}"/>
+                        <field name="registered" invisible="True"/>
+                        <button name="action_register" type="object" string="Register" attrs="{'invisible':[('registered', '==', True)]}"/>
+                        <button name="action_unsubscribe" type="object" string="Unsubscribe" attrs="{'invisible':[('registered', '==', False)]}"/>
                     </header> 
                     <sheet>
                         <!--<div name="button_box" class="oe_button_box">
@@ -104,9 +104,9 @@
                                 <field name="company_country_code" invisible="1"/> 
                             </group>
                             <group>
-                                <!--<field name="dada_alta" string="¿Dada de alta?" readonly="True"/>-->
-                                <field name="fecha_de_alta" string="Dada de alta en" readonly="True"/>
-                                <field name="fecha_de_baja" string="Dada de baja en" readonly="True"/>
+                                <!--<field name="registered" string="¿Dada de alta?" readonly="True"/>-->
+                                <field name="register_date" string="Registered in" readonly="True"/>
+                                <field name="unsubscribe_date" string="Unsubscribed in" readonly="True"/>
                             </group>
                             <!-- <group>
                                 <field name="department_id"/>
