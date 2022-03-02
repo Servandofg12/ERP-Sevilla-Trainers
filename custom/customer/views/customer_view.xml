@@ -59,7 +59,7 @@
                                 <field name="user_id" string="User who's going to use the app" widget="many2one" options="{'no_create': False}"/>
                               </group>
                             </page2 >
-                            <page3 string="Personal and Contac data">
+                            <page3 string="Personal and Contact data">
                               <group>
                                 <group>
                                   <field name="have_dni" string="¿Does she have DNI?"/>
@@ -103,8 +103,8 @@
             <field name="name">customer.customer.search</field>
             <field name="model">customer.customer</field>
             <field name="arch" type="xml">
-                <search string="Socia buscador">
-                    <field name="registered" string="Dadas de Alta"/>
+                <search string="Customer searcher">
+                    <field name="registered" string="Registered"/>
                     <separator/>
                     <filter string="Registered" name="registered" domain="[('registered', '=', True)]"/>
                     <filter string="Unsubscribed" name="registered" domain="[('registered', '=', False)]"/>

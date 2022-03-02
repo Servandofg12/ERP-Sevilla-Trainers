@@ -267,7 +267,7 @@ class HrEmployeePrivate(models.Model):
 
             if user:
 
-                self._cr.execute('select count(*) from usuario_socia where user_id = %s', (user.id,))
+                self._cr.execute('select count(*) from customer_customer where user_id = %s', (user.id,))
                 data = self._cr.dictfetchall()
 
                 if data[0]['count'] > 0:

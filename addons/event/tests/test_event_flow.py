@@ -7,10 +7,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo.exceptions import ValidationError
-from odoo.tests.common import Form
+from odoo.tests.common import Form, tagged
 from odoo.tools import mute_logger
 
-
+@tagged('event1')
 class TestEventUI(TestEventCommon):
 
     def test_event_registration_partner_sync(self):
@@ -62,7 +62,7 @@ class TestEventUI(TestEventCommon):
         self.assertEqual(registration.phone, self.event_customer2.phone)
         self.assertEqual(registration.mobile, self.event_customer2.mobile)
 
-
+@tagged('event2')
 class TestEventFlow(TestEventCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')

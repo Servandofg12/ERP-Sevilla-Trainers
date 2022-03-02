@@ -8,10 +8,10 @@ from odoo import Command
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo import exceptions
 from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
-from odoo.tests.common import users, Form
+from odoo.tests.common import tagged, users, Form
 from odoo.tools import mute_logger
 
-
+@tagged('event3')
 class TestEventData(TestEventCommon):
 
     @classmethod
