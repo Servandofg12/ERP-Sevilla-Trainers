@@ -1,8 +1,9 @@
-from odoo import api, fields, models, exceptions
+from odoo import api, fields, models, exceptions, Command
 import datetime
 import re
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError, UserError
+#from addons.account.models import Customer
 
 
 class Customer(models.Model):#retocar el security 
@@ -40,6 +41,7 @@ class Customer(models.Model):#retocar el security
     user_id = fields.Many2one('res.users', 'User', index=True, store=True, readonly=False)
     monthly_review_ids = fields.One2many("monthly.review", "customer_id", string="Monthly review")
     customer_training_ids = fields.One2many("customer.training", "customer_id", string="Trainings")
+    #account_move_ids = fields.One2many("account.move", "customer_id")
 
     #Computed fields----------------------------------------------------------------------------------------------------------------------
     age = fields.Integer(compute="_compute_age")
@@ -228,6 +230,7 @@ class Customer(models.Model):#retocar el security
                 record.registered = True
                 record.register_date = datetime.date.today()
                 record.unsubscribe_date = None
+                record.payday = datetime.date.today() + relativedelta(months=1)
         return True
 
     def action_unsubscribe(self):
@@ -238,6 +241,37 @@ class Customer(models.Model):#retocar el security
                 record.registered = False
                 record.unsubscribe_date = datetime.date.today()
         return True
+
+    def action_mensual_payment(self):
+        journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
+        for record in self:
+            partner = self.env["res.partner"].search([("name", "=", record.user_id.name)], limit=1)
+
+            if(record.registered):
+                next_payday = record.payday + relativedelta(months=1)
+                record.payday = next_payday
+
+                account_move = self.env["account.move"].create(
+                    {
+                        "name": "Mensualidad de la socia " + str(record.name) + " " + str(len(record.account_move_ids)+1),
+                        "partner_id": partner,
+                        "move_type": "out_invoice",
+                        "journal_id": journal.id,
+                        "customer_id": record.id,
+                        "invoice_line_ids": 
+                            Command.create(
+                                {
+                                    "name": record.name,
+                                    "quantity": 1.0,
+                                    "price_unit": record.season_pass_cost,
+                                })
+                    }
+                )
+                
+                account_move.action_post()#to post it
+                toPay = account_move.action_register_payment()#to make it paid
+
+
 
     
 

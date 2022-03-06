@@ -1,4 +1,3 @@
-from django.forms import fields
 from odoo import models, Command, fields
 
 class EstatePropertyInherited(models.Model):

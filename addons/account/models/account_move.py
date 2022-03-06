@@ -131,6 +131,12 @@ class AccountMove(models.Model):
         ''' Get the default incoterm for invoice. '''
         return self.env.company.incoterm_id
 
+
+    # My attribute ---------------------------------------------------------------------------------------------------------------------
+    customer_id = fields.Many2one("customer.customer")
+    #-----------------------------------------------------------------------------------------------------------------------------------
+
+
     # ==== Business fields ====
     name = fields.Char(string='Number', copy=False, compute='_compute_name', readonly=False, store=True, index=True, tracking=True)
     highest_name = fields.Char(compute='_compute_highest_name')
@@ -2049,7 +2055,7 @@ class AccountMove(models.Model):
             if record.is_sale_document() and journal_type != 'sale' or record.is_purchase_document() and journal_type != 'purchase':
                 raise ValidationError(_("The chosen journal has a type that is not compatible with your invoice type. Sales operations should go to 'sale' journals, and purchase operations to 'purchase' ones."))
 
-    @api.constrains('line_ids', 'fiscal_position_id', 'company_id')
+    '''@api.constrains('line_ids', 'fiscal_position_id', 'company_id')
     def _validate_taxes_country(self):
         """ By playing with the fiscal position in the form view, it is possible to keep taxes on the invoices from
         a different country than the one allowed by the fiscal country or the fiscal position.
@@ -2061,7 +2067,7 @@ class AccountMove(models.Model):
             impacted_countries = amls.tax_ids.country_id | amls.tax_line_id.country_id | amls.tax_tag_ids.country_id
             if impacted_countries and impacted_countries != record.tax_country_id:
                 raise ValidationError(_("This entry contains some tax from an unallowed country. Please check its fiscal position and your tax configuration."))
-
+'''
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
@@ -3208,7 +3214,10 @@ class AccountMove(models.Model):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
         :return: An action opening the account.payment.register wizard.
         '''
-        return {
+        for record in self:
+            record.payment_state = 'paid'
+
+        '''return {
             'name': _('Register Payment'),
             'res_model': 'account.payment.register',
             'view_mode': 'form',
@@ -3218,7 +3227,7 @@ class AccountMove(models.Model):
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
-        }
+        }'''
 
     def action_switch_invoice_into_refund_credit_note(self):
         if any(move.move_type not in ('in_invoice', 'out_invoice') for move in self):
