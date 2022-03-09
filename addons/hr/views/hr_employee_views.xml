@@ -53,6 +53,7 @@
                         <field name="registered" invisible="True"/>
                         <button name="action_register" type="object" string="Register" attrs="{'invisible':[('registered', '==', True)]}"/>
                         <button name="action_unsubscribe" type="object" string="Unsubscribe" attrs="{'invisible':[('registered', '==', False)]}"/>
+                        <button name="action_monthly_payment" type="object" string="Payment"/>
                     </header> 
                     <sheet>
                         <!--<div name="button_box" class="oe_button_box">
@@ -107,6 +108,9 @@
                                 <!--<field name="registered" string="¿Dada de alta?" readonly="True"/>-->
                                 <field name="register_date" string="Registered in" readonly="True"/>
                                 <field name="unsubscribe_date" string="Unsubscribed in" readonly="True"/>
+                                <field name="payday" string="Payday" readonly="1"/>
+                                <field name="working_hours" string="Hours to work/day"/>
+                                <field name="working_days" />
                             </group>
                             <!-- <group>
                                 <field name="department_id"/>
@@ -236,13 +240,13 @@
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1"/>
                     <field name="work_email"/>
-                    <field name="activity_ids" widget="list_activity"/>
+                    <!-- <field name="activity_ids" widget="list_activity"/> -->
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
-                    <field name="activity_date_deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
+                    <!-- <field name="activity_date_deadline" widget="remaining_days" options="{'allow_order': '1'}"/> -->
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
-                    <field name="parent_id"/>
+                    <!-- <field name="parent_id"/> -->
                     <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" invisible="1"/>
                     <field name="active" invisible="1"/>

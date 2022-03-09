@@ -33,4 +33,6 @@ from . import ir_actions_report
 from . import res_currency
 from . import res_bank
 from . import mail_thread
-from . import customer_inherited
+
+#MY CLASSES --------------------------------------------
+from . import customer_inherited, hr_employee_inherited

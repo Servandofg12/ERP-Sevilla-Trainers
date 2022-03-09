@@ -7,7 +7,7 @@ from odoo.tests import tagged
 import datetime
 from dateutil.relativedelta import relativedelta
 
-@tagged('employee')
+@tagged('post_install', 'employee')
 class TestHrEmployee(TestHrCommon):
 
     def setUp(self):
@@ -24,7 +24,7 @@ class TestHrEmployee(TestHrCommon):
             'image_1920': False
         })
 
-        #Para las pruebas de dar de alta y baja
+        #FOR REGISTER AND UNSUBSCRIBE FUNCTIONALITIES ----------------------
         self.user_without_image_2 = self.env['res.users'].create([{
             'name': 'Prueba',
             'email': 'prueba23@example.com',
@@ -43,6 +43,12 @@ class TestHrEmployee(TestHrCommon):
             'image_1920': False,
             'login': 'prueba_3',
             'password': 'prueba_123'
+        },{
+            'name': 'Prueba4',
+            'email': 'prueba4444@example.com',
+            'image_1920': False,
+            'login': 'prueba_4',
+            'password': 'prueba_123'
         }])
 
         self.employee_without_image_2 = self.env['hr.employee'].create([{
@@ -55,22 +61,37 @@ class TestHrEmployee(TestHrCommon):
             'unsubscribe_date': datetime.date.today() - relativedelta(months=2)
         }])
 
-        fecha_normal = datetime.date.today() - relativedelta(years=23)
+        normal_date = datetime.date.today() - relativedelta(years=23)
 
-        self.socias = self.env['customer.customer'].create(
+        self.customer = self.env['customer.customer'].create([
                 {
                     'have_dni': True, 
                     'dni': "66727211S",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
-                    'birth_date': fecha_normal,
+                    'birth_date': normal_date,
                     'actual_weight': 65.0,
                     'actual_height': 1.75,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "Quiero ganar confianza en mí misma.",
+                    'goal': "I want to become more confidence.",
                     'user_id': self.user_without_image_2[2].id
-                }
+                },
+                {
+                    'have_dni': True, 
+                    'dni': "66727240W",
+                    'name': "Hola",
+                    'surnames': "Ejemplo Ejemplo",
+                    'birth_date': normal_date,
+                    'actual_weight': 65.0,
+                    'actual_height': 1.75,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "I want to become more confidence.",
+                    'user_id': self.user_without_image_2[3].id,
+                    'registered': False,
+                    'unsubscribe_date': datetime.date.today() - relativedelta(months=2)
+                }]
             )
 
 
@@ -128,17 +149,16 @@ class TestHrEmployee(TestHrCommon):
 
 
 
-    #TESTS PARA COMPROBAR LA FUNCIONALIDAD DE DAR DE ALTA Y BAJA -----------------------------------------------------------------------
+    #TESTS FOR REGISTER AND UNSUBSCRIBE FUNCTIONALITIES -----------------------------------------------------------------------
 
-    #test para comprobar que se da de baja correctamente
-    def test_p_1_action_action_dar_de_alta(self):
-        print("PRIMER TEST")
+    def test_p_1_register_action(self):
+        print("FIRST TEST")
         print("\n")
         #Solo el segundo esta dado de baja ([1]), por lo tanto, el primero ([0]) esta dado de alta.
-        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[1].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[1].unsubscribe_date))
+        print("BEFORE: Registered: " + str(self.employee_without_image_2[1].registered) + " - Unsubscribed date: " + str(self.employee_without_image_2[1].unsubscribe_date))
         print("\n")
         self.employee_without_image_2[1].action_register()
-        print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[1].registered) + " - Fecha de alta: " + str(self.employee_without_image_2[1].register_date))
+        print("AFTER: Registered: " + str(self.employee_without_image_2[1].registered) + " - Register date: " + str(self.employee_without_image_2[1].register_date))
         print("\n")
         var = self.assertRecordValues(self.employee_without_image_2,[
             {'name': 'Prueba', 'registered': True},
@@ -147,16 +167,16 @@ class TestHrEmployee(TestHrCommon):
 
         return var
 
-    #test para comprobar que no se puede dar de alta si ya esta dada de alta
-    def test_p_2_action_action_dar_de_alta_falla(self):
-        print("SEGUNDO TEST")
+
+    def test_p_2_register_action_wrong(self):
+        print("SECOND TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[0].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[0].unsubscribe_date))
+        print("BEFORE: Registered: " + str(self.employee_without_image_2[0].registered) + " - Unsubscribed date: " + str(self.employee_without_image_2[0].unsubscribe_date))
         print("\n")
         try:
             self.employee_without_image_2[0].action_register()
-            print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[0].registered) + " - Fecha de alta: " + str(self.employee_without_image_2[0].register_date))
+            print("AFTER: Registered: " + str(self.employee_without_image_2[0].registered) + " - Register date: " + str(self.employee_without_image_2[0].register_date))
             print("\n")
             var = self.assertRecordValues(self.employee_without_image_2,[
                 {'name': 'Prueba', 'registered': True},
@@ -164,7 +184,7 @@ class TestHrEmployee(TestHrCommon):
             ])
             return var
         except:
-            print("Ya estaba dada de alta por lo que salta la exception UserError")
+            print("She's already registered so it gives an UserError exception")
             print("\n")
             var = self.assertRecordValues(self.employee_without_image_2,[
                 {'name': 'Prueba', 'registered': True},
@@ -173,17 +193,16 @@ class TestHrEmployee(TestHrCommon):
             return var
 
 
-    #test para comprobar que se da de baja si correctamente
-    def test_p_3_action_action_dar_de_baja(self):
-        print("TERCER TEST")
+    def test_p_3_unsubscribe_action(self):
+        print("THIRD TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[0].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[0].unsubscribe_date))
+        print("BEFORE: Registered: " + str(self.employee_without_image_2[0].registered) + " - Unsubscribed date: " + str(self.employee_without_image_2[0].unsubscribe_date))
         print("\n")
 
         self.employee_without_image_2[0].action_unsubscribe()
 
-        print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[0].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[0].unsubscribe_date))
+        print("AFTER: Registered: " + str(self.employee_without_image_2[0].registered) + " - Unsubscribed date: " + str(self.employee_without_image_2[0].unsubscribe_date))
         print("\n")
         var = self.assertRecordValues(self.employee_without_image_2,[
                 {'name': 'Prueba', 'registered': False},
@@ -192,16 +211,15 @@ class TestHrEmployee(TestHrCommon):
         return var
 
 
-    #test para comprobar que no se puede dar de alta si ya esta dada de alta
-    def test_p_4_action_action_dar_de_baja_falla(self):
-        print("CUARTO TEST")
+    def test_p_4_unsubscribe_action_wrong(self):
+        print("FOURTH TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Dada de alta: " + str(self.employee_without_image_2[1].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[1].unsubscribe_date))
+        print("BEFORE: Registered: " + str(self.employee_without_image_2[1].registered) + " - Unsubscribed date: " + str(self.employee_without_image_2[1].unsubscribe_date))
         print("\n")
         try:
             self.employee_without_image_2[1].action_unsubscribe()
-            print("DESPUES: Dada de alta: " + str(self.employee_without_image_2[1].registered) + " - Fecha de baja: " + str(self.employee_without_image_2[1].unsubscribe_date))
+            print("AFTER: Registered: " + str(self.employee_without_image_2[1].registered) + " - Unsubscribed date: " + str(self.employee_without_image_2[1].unsubscribe_date))
             print("\n")
             var = self.assertRecordValues(self.employee_without_image_2,[
                 {'name': 'Prueba', 'registered': True},
@@ -209,7 +227,7 @@ class TestHrEmployee(TestHrCommon):
             ])
             return var
         except:
-            print("Ya estaba dada de baja por lo que salta la exception UserError")
+            print("She's already unsubscribed so it gives an UserError exception")
             print("\n")
             var = self.assertRecordValues(self.employee_without_image_2,[
                 {'name': 'Prueba', 'registered': True},
@@ -218,43 +236,42 @@ class TestHrEmployee(TestHrCommon):
             return var
 
 
-    #TEST DE INICIO DE SESION ---------------------------------------------------------------------------------------------------------------
+    #LOGIN TEST ---------------------------------------------------------------------------------------------------------------
 
-    #test para comprobar que no se puede crear otro empleado con el mismo usuario de inicio de sesión
-    def test_p_5_crear_usuario_con_mismo_inicio_sesion(self):
-        print("QUINTO TEST")
+    def test_p_5_create_user_with_the_same_other_username(self):
+        print("FIFTH TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Usuario: " + str(self.employee_without_image_2[0].user_id.name))
+        print("BEFORE: User: " + str(self.employee_without_image_2[0].user_id.name))
         print("\n")
         try:
-            self.employee_without_image_falla = self.env['hr.employee'].create({
+            self.employee_without_image_wrong = self.env['hr.employee'].create({
             'user_id': self.user_without_image_2[0].id,
             'image_1920': False,
         })
         except:
-            print("Ya existe ese inicio de sesión, entonces falla.")
+            print("That username already exists. Try with another one.")
             print("\n")
             var = True
             return var
 
-    #test para comprobar que no se puede crear una socia con el mismo usuario de inicio de sesión que un empleado
-    def test_p_6_crear_usuario_con_mismo_inicio_sesion_que_empleado(self):
-        print("SEXTO TEST")
+
+    def test_p_6_create_user_with_the_same_username_as_employee(self):
+        print("SIXTH TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Usuario empleado: " + str(self.employee_without_image_2[0].user_id.name))
+        print("BEFORE: User employee: " + str(self.employee_without_image_2[0].user_id.name))
         print("\n")
         try:
-            fecha_normal = datetime.date.today() - relativedelta(years=23)
+            normal_date = datetime.date.today() - relativedelta(years=23)
 
-            self.socias = self.env['customer.customer'].create([
+            self.customer = self.env['customer.customer'].create([
                 {
                     'have_dni': True, 
                     'dni': "66727211S",
                     'name': "Hola",
                     'surnames': "Ejemplo Ejemplo",
-                    'birth_date': fecha_normal,
+                    'birth_date': normal_date,
                     'actual_weight': 65.0,
                     'actual_height': 1.75,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
@@ -264,45 +281,118 @@ class TestHrEmployee(TestHrCommon):
                 }
             ])
         except:
-            print("Ya existe ese inicio de sesión, entonces falla.")
+            print("That username already exists. Try with another one.")
             print("\n")
             var = True
             return var
 
-    #test para comprobar que no se puede crear otro empleado con el mismo usuario de inicio de sesión que una socia
-    def test_p_7_crear_usuario_con_mismo_inicio_sesion_que_socia(self):
-        print("SEPTIMO TEST")
+
+    def test_p_7_create_user_with_the_same_username_as_customer(self):
+        print("SEVENTH TEST")
         print("\n")
 
-        print("ANTES: Usuario socia: " + str(self.socias.user_id.login))
+        print("BEFORE: User customer: " + str(self.customer[0].user_id.login))
         print("\n")
         try:
             self.employee_without_image_2 = self.env['hr.employee'].create({
             'name': 'Prueba',
-            'user_id': self.socias.user_id.id,
+            'user_id': self.customer[0].user_id.id,
             'image_1920': False,
         })
         except:
-            print("Ya existe ese inicio de sesión, entonces falla.")
+            print("That username already exists. Try with another one.")
             print("\n")
             var = True
             return var
 
-    #TEST DE EDICION DE DATOS ---------------------------------------------------------------------------------------------------------------
+    #TEST EDIT DATA ---------------------------------------------------------------------------------------------------------------
 
-    #test para comprobar que se pueden editar los datos de los empleados
-    def test_p_8_editar_datos_empleado(self):
-        print("OCTAVO TEST")
+    def test_p_8_edit_employee_data(self):
+        print("EIGHTH TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
-        print("ANTES: Nombre empleado: " + str(self.employee_without_image_2[0].name))
+        print("BEFORE: Name employee: " + str(self.employee_without_image_2[0].name))
         print("\n")
 
         self.employee_without_image_2_2 = self.employee_without_image_2[0].write({
-            'name': 'José María'
+            'name': 'Jose Maria'
         })
         
-        print("DESPUES: Nombre empleado: " + str(self.employee_without_image_2[0].name))
+        print("AFTER: Name employee: " + str(self.employee_without_image_2[0].name))
         print("\n")
-        var = self.assertEqual(self.employee_without_image_2[0].name, 'José María')
+        var = self.assertEqual(self.employee_without_image_2[0].name, 'Jose Maria')
+        return var
+
+
+    #TEST FOR MONTHLY PAYMENT FUNCTIONALITY ---------------------------------------------------------------------
+
+    def test_p_9_one_monthly_payment_for_customer(self):
+        print("NINETH TEST")
+        print("\n")
+        first_payday = self.customer[0].payday
+        print("BEFORE: Payday: " + str(self.customer[0].payday))
+        print("\n")
+
+        self.customer[0].action_monthly_payment()
+        print("AFTER: Payday: " + str(self.customer[0].payday))
+        account_move = self.env["account.move"].search([("customer_id", "=", self.customer[0].id)], limit=1)
+        print(account_move.name)
+        print("\n")
+
+        var = self.assertEqual(self.customer[0].payday, first_payday + relativedelta(months=1))
+        var2 = self.assertEqual(account_move.name, "Monthly payment of customer Hola 1")
+        result = var and var2
+
+        return result
+
+
+    def test_p_10_one_monthly_payment_for_an_unsubscribed_customer(self):
+        print("TENTH TEST")
+        print("\n")
+        first_payday = self.customer[1].payday
+        print("BEFORE: Payday: " + str(self.customer[1].payday))
+        print("\n")
+
+        try:
+            self.customer[1].action_monthly_payment()
+        except: 
+            print("AFTER: Payday: " + str(self.customer[1].payday))
+            print("\n")
+
+        var = self.assertEqual(first_payday, self.customer[1].payday)
+
+        return var
+
+    
+    def test_p_11_one_monthly_payment_for_employee(self):
+        print("ELEVENTH TEST")
+        print("\n")
+        first_payday = self.employee_without_image_2[0].payday
+        print("BEFORE: Payday: " + str(self.employee_without_image_2[0].payday))
+        print("\n")
+
+        self.employee_without_image_2[0].action_monthly_payment()
+        print("AFTER: Payday: " + str(self.employee_without_image_2[0].payday))
+        print("\n")
+
+        var = self.assertEqual(self.employee_without_image_2[0].payday, first_payday + relativedelta(months=1))
+
+        return var
+
+    
+    def test_p_12_one_monthly_payment_for_an_unsubscribed_customer(self):
+        print("TWELFTH TEST")
+        print("\n")
+        first_payday = self.employee_without_image_2[1].payday
+        print("BEFORE: Payday: " + str(self.employee_without_image_2[1].payday))
+        print("\n")
+
+        try:
+            self.employee_without_image_2[1].action_monthly_payment()
+        except: 
+            print("AFTER: Payday: " + str(self.employee_without_image_2[1].payday))
+            print("\n")
+
+        var = self.assertEqual(first_payday, self.employee_without_image_2[1].payday)
+
         return var

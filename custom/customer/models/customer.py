@@ -242,7 +242,7 @@ class Customer(models.Model):#retocar el security
                 record.unsubscribe_date = datetime.date.today()
         return True
 
-    def action_mensual_payment(self):
+    def action_monthly_payment(self):
         journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
         for record in self:
             partner = self.env["res.partner"].search([("name", "=", record.user_id.name)], limit=1)
@@ -253,7 +253,7 @@ class Customer(models.Model):#retocar el security
 
                 account_move = self.env["account.move"].create(
                     {
-                        "name": "Mensualidad de la socia " + str(record.name) + " " + str(len(record.account_move_ids)+1),
+                        "name": "Monthly payment of customer " + str(record.name) + " " + str(len(record.account_move_ids)+1),
                         "partner_id": partner,
                         "move_type": "out_invoice",
                         "journal_id": journal.id,
@@ -269,7 +269,10 @@ class Customer(models.Model):#retocar el security
                 )
                 
                 account_move.action_post()#to post it
-                toPay = account_move.action_register_payment()#to make it paid
+                account_move.action_register_payment()#to make it paid
+            
+            else:
+                raise UserError("This customer isn't registered.")
 
 
 

@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 
-from odoo import api, fields, models, exceptions, _
+from odoo import api, fields, models, exceptions, Command,_
 from odoo.osv.query import Query
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.osv import expression
@@ -36,6 +36,9 @@ class HrEmployeePrivate(models.Model):
     registered = fields.Boolean(default=True, groups="hr.group_hr_user")
     register_date = fields.Date(default=date.today(), groups="hr.group_hr_user")
     unsubscribe_date = fields.Date(groups="hr.group_hr_user")
+    payday = fields.Date(default=date.today(), groups="hr.group_hr_user")
+    working_hours = fields.Float(default=4.0, string="Hours worked per day")
+    working_days = fields.Integer(default=15, string="Working days")
 
     #-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -490,7 +493,7 @@ class HrEmployeePrivate(models.Model):
         return ['mobile_phone']
 
     
-    #My Actions-------------------------------------------------------------------------------------------------------------
+    #MY ACTIONS -------------------------------------------------------------------------------------------------------------
 
     def action_register(self):
         for record in self:
@@ -510,4 +513,37 @@ class HrEmployeePrivate(models.Model):
                 record.registered = False
                 record.unsubscribe_date = date.today()
         return True
+
+    def action_monthly_payment(self):
+        journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
+        for record in self:
+            partner = self.env["res.partner"].search([("name", "=", record.user_id.name)], limit=1)
+
+            if(record.registered):
+                next_payday = record.payday + relativedelta(months=1)
+                record.payday = next_payday
+
+                account_move = self.env["account.move"].create(
+                    {
+                        "name": "Monthly payment of employee " + str(record.name) + " " + str(len(record.account_move_ids)+1),
+                        "partner_id": partner,
+                        "move_type": "out_refund",
+                        "journal_id": journal.id,
+                        "employee_id": record.id,
+                        "invoice_line_ids": 
+                            Command.create(
+                                {
+                                    "name": record.name,
+                                    "quantity": 1.0,
+                                    "price_unit": record.working_hours * 10 * record.working_days,
+                                })
+                    }
+                )
+                
+                account_move.action_post()#to post it
+                account_move.action_register_payment()#to make it paid
+            
+            else:
+                raise UserError("This employee isn't registered.")
+
 
