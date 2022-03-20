@@ -3,10 +3,9 @@ import datetime
 import re
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError, UserError
-#from addons.account.models import Customer
 
 
-class Customer(models.Model):#retocar el security 
+class Customer(models.Model):
     _name = "customer.customer"
     _description = "Customers for the Sevilla Trainers gym."
     _order = "name"

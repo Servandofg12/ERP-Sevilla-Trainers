@@ -68,6 +68,9 @@
                                 <br/>
                                 <field name="ticket_instructions" nolabel="1" class="pt-2"/>
                            </page>
+                           <page string="Customer's score">
+                               
+                           </page>
                        </notebook>
                     </sheet>
                 </form>
@@ -250,6 +253,11 @@
                                     <field nolabel="1" colspan="2" name="note" placeholder="Add a note..."/>
                                     <label for="ticket_instructions" string="Ticket Instructions"/><br/>
                                     <field nolabel="1" colspan="2" name="ticket_instructions"/>
+                                </group>
+                            </page>
+                            <page string="Customer's score" name="score_event_ids">
+                                <group editable="top">
+                                    <field name="score_event_ids"/>
                                 </group>
                             </page>
                         </notebook>
