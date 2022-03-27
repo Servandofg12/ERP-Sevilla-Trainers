@@ -8,7 +8,7 @@
       <field name="arch" type="xml">
         <tree string="Propiedades" editable="bottom">
           <field name="score" string="Score"></field>
-          <field name="event_id" string="Event"></field>
+          <field name="event_id" string="Event" invisible="True"></field>
           <field name="user_id" string="Customer"></field>
         </tree>
       </field>
