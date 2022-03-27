@@ -144,7 +144,8 @@ class TestEventCommon(common.TransactionCase):
 
 
 
-    #test en el que el usuario que intenta valorar no está registrado en la clase
+
+#MY TESTS ------------------------------------------------------------------------------------------------------------------
     def test_p_01_incorrect_score(self):
         print("\n")
         print("FIRST TEST")
@@ -159,7 +160,7 @@ class TestEventCommon(common.TransactionCase):
         except:
             print("It brings an Usererror: That customer hasn't been registered for the event, so she can't score it.")
 
-    #test en el que el usuario valora una clase que ha asistido una vez
+
     def test_p_02_correct_score(self):
         print("\n")
         print("SECOND TEST")
@@ -192,8 +193,7 @@ class TestEventCommon(common.TransactionCase):
         print("EVENT: " + str(score_event.event_id.name))
 
 
-    #test en el que el usuario valora una clase que ha asistido dos veces
-    def test_p_02_correct_score(self):
+    def test_p_03_double_score(self):
         print("\n")
         print("SECOND TEST")
 
