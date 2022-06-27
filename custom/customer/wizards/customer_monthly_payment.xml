@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        
+
+    <record id="view_customer_monthly_payment" model="ir.ui.view">
+            <field name="name">customer.monthly.payment.form</field>
+            <field name="model">customer.monthly.payment</field>
+            <field name="arch" type="xml">
+                <form string="Monthly Payment">
+                    <group>
+                        <field name="name" string="Identifier name"/>
+                        <field name="customer_id" invisible="1"/>
+                        <field name="amount_months"/>
+                    </group>
+                    <footer>
+                        <button string='Pay' name="action_monthly_payment" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+
+    <record id="action_view_customer_monthly_payment" model="ir.actions.act_window">
+            <field name="name">Monthly Payment</field>
+            <field name="res_model">customer.monthly.payment</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_customer_monthly_payment"/>
+            <field name="target">new</field>
+        </record>
+</odoo>

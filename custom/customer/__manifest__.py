@@ -10,12 +10,14 @@
     """,
     'data': [
         'security/ir.model.access.csv',
+        'wizards/customer_monthly_payment.xml',
         'views/customer_view.xml',
         'views/res_user_view.xml',
         'views/monthly_review_view.xml',
         'views/training_machine_views.xml',
         'views/customer_training_views.xml',
         'views/customer_menu.xml'
+        
         ],
     "license":"LGPL-3",
 }

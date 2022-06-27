@@ -275,6 +275,13 @@ class Customer(models.Model):
 
 
 
+    #Action that will make more than one payment if necessary
+    def action_more_than_one_monthly_payment(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_view_account_move_reversal")
+        return action
+
+
+
     
 
 

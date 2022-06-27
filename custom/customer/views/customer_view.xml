@@ -29,6 +29,9 @@
                 <button name="action_register" type="object" string="Register" attrs="{'invisible':[('registered', '==', True)]}"/>
                 <button name="action_unsubscribe" type="object" string="Unsubscribe" attrs="{'invisible':[('registered', '==', False)]}"/>
                 <button name="action_monthly_payment" type="object" string="Payment" attrs="{'invisible':[('registered', '==', False)]}"/>
+                <!-- WIZARD -->
+                <button name="%(action_view_customer_monthly_payment)d" string="Payment (one or more months)" type="action" class="oe-highlight" attrs="{'invisible':[('registered', '==', False)]}"/>
+                        
               </header>
 
                 <sheet>
