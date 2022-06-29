@@ -61,6 +61,7 @@ class CustomerTestCase(TransactionCase):
             }
         ])
 
+        
 
     def test_p_01_correct_customer(self):
         print("\n")
@@ -804,4 +805,51 @@ class CustomerTestCase(TransactionCase):
         var4 = self.assertEqual(self.customers[0].age, 58)
         res = var1 and (var2 and (var3 and (var4)))
         return res
+
+
+
+    #TEST FOR PAYMENT MORE THAN ONE MONTH AT THE SAME TIME -------------------------------------------------------------------------------------
+
+    def test_p_23_more_than_one_month_payment(self):
+        #There is an error because the wizard needs to know what customer we have and in a test case we can't make it
+        print("TWENTY THIRD TEST")
+        print("\n")
+
+        self.customer_monthly_payment = self.env['customer.monthly.payment'].create(
+            {
+                'name': 'Example of two payments in a row',
+                'customer_id': self.customers[0].id,
+                'amount_months': 2
+            }
+        )
+
+        
+        self.customer_monthly_payment.action_monthly_payment_2()
+        invoice = self.env["account.move"].search([("name", "=", "Example of two payments in a row")])
+        print(invoice)
+
+        return True
+
+    def test_p_24_more_than_one_month_payment_customer_not_registered(self):
+        #There is an error because the wizard needs to know what customer we have and in a test case we can't make it
+        print("TWENTY FOURTH TEST")
+        print("\n")
+
+        try:
+
+            self.customer_monthly_payment = self.env['customer.monthly.payment'].create(
+                {
+                    'name': 'Example of two payments in a row',
+                    'customer_id': self.customers[1].id,
+                    'amount_months': 2
+                }
+            )
+            self.customer_monthly_payment.action_monthly_payment_2()
+            invoice = self.env["account.move"].search([("name", "=", "Example of two payments in a row")])
+            print(invoice)
+            return True
+        
+        except:
+            print("The customer isn't registered, so you can't register a monthly payment")
+            print("\n")
 

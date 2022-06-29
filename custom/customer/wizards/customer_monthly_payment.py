@@ -22,10 +22,11 @@ class CustomerMonthlyPayment(models.TransientModel):
     ]
 
 
-    def action_monthly_payment(self):
+    def action_monthly_payment_2(self):
         journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
         for record in self:
             record.customer_id = self.env["customer.customer"].search([("id", "=", self.env.context.get('active_id'))])
+
             partner = self.env["res.partner"].search([("name", "=", record.customer_id.user_id.name)], limit=1)
 
             if(record.customer_id.registered):
