@@ -831,7 +831,6 @@ class CustomerTestCase(TransactionCase):
         return True
 
     def test_p_24_more_than_one_month_payment_customer_not_registered(self):
-        #There is an error because the wizard needs to know what customer we have and in a test case we can't make it
         print("TWENTY FOURTH TEST")
         print("\n")
 
@@ -840,7 +839,7 @@ class CustomerTestCase(TransactionCase):
             self.customer_monthly_payment = self.env['customer.monthly.payment'].create(
                 {
                     'name': 'Example of two payments in a row',
-                    'customer_id': self.customers[1].id,
+                    'customer_id': self.customers[1].id,#Customer unsubscribed
                     'amount_months': 2
                 }
             )

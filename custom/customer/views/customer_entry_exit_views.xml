@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+  <odoo>
+
+    <!-- Para la vista de Listado o Tree-->
+    <record id="customer_entry_exit_tree" model="ir.ui.view">
+      <field name="name">customer.entry.exit.tree</field>
+      <field name="model">customer.entry.exit</field>
+      <field name="arch" type="xml">
+        <tree string="Properties" editable="bottom"> 
+            <field name="last_entry_time" string="Last entry time" readonly="1"/>
+            <button name="action_date_entry_to_gym" string="Set Entry Time" type="object" icon="fa-play"/>
+            <field name="last_exit_time" string="Last exit time" readonly="1"/>
+            <button name="action_date_exit_to_gym" string="Set Exit Time" type="object" icon="fa-power-off"/>
+        </tree>
+      </field>
+    </record>
+
+
+    <!-- Para que aparezca el boton en el menu-->
+    <record id="customer_entry_exit_action" model="ir.actions.act_window">
+      <field name="name">Entry or Exit</field>
+      <field name="res_model">customer.entry.exit</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+  </odoo>

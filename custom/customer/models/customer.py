@@ -35,11 +35,13 @@ class Customer(models.Model):
     payday = fields.Date(default=datetime.date.today() + relativedelta(months=1), readonly=True)
     goal = fields.Char()
     image_1920 = fields.Image(compute_sudo=True)
+    
 
     #Relations between tables----------------------------------------------------------------------------------------------------------
     user_id = fields.Many2one('res.users', 'User', index=True, store=True, readonly=False)
     monthly_review_ids = fields.One2many("monthly.review", "customer_id", string="Monthly review")
     customer_training_ids = fields.One2many("customer.training", "customer_id", string="Trainings")
+    customer_entry_exit_ids = fields.One2many("customer.entry.exit", "customer_id", string="Entry/Exit timer")
     #account_move_ids = fields.One2many("account.move", "customer_id")
 
     #Computed fields----------------------------------------------------------------------------------------------------------------------
@@ -279,6 +281,9 @@ class Customer(models.Model):
     def action_more_than_one_monthly_payment(self):
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_view_account_move_reversal")
         return action
+
+    
+    
 
 
 

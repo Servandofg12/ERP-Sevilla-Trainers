@@ -95,6 +95,11 @@
                                 <field name="customer_training_ids" widget="one2many_list"/>
                               </group>
                             </page6>
+                            <page7 string="Entry/Exit Timer" attrs="{'invisible':[('registered', '==', False)]}">
+                              <group>
+                                <field name="customer_entry_exit_ids" widget="one2many_list"/>
+                              </group>
+                            </page7>
                         </notebook>
                     </group>
                 </sheet>

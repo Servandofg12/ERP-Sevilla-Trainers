@@ -16,6 +16,6 @@ class CustomerTraining(models.Model):#retocar el security
     numb_turns = fields.Integer(default=1)
     machine_use = fields.Boolean()
 
-    #Relationship between tables----------------------------------------------------------------------------------------------------------
+    #Relationship between tables---------------------------------------------------------------------------------------------
     customer_id = fields.Many2one("customer.customer", string="Customer")
     training_machine_ids = fields.Many2many("training.machine", string="Machine")
