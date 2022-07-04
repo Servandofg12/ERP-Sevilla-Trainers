@@ -24,7 +24,6 @@ class CustomerEntryExit(models.Model):
 
     def action_date_entry_to_gym(self):
         for record in self:
-            print(record.last_entry_time)
             if record.customer_id.registered == False:
                 raise exceptions.UserError("She is already unsubscribed.")
             elif record.last_entry_time:

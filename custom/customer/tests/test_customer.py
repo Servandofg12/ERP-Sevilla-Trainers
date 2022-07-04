@@ -521,11 +521,209 @@ class CustomerTestCase(TransactionCase):
             ])
             return var
 
+    
+    #TEST FOR ENTRY AND EXIT TIME -------------------------------------------------------------------------------------
+
+    def test_p_16_register_entry_time_on_an_unsubscribed_customer(self):
+        print("SIXTEENTH TEST")
+        print("\n")
+
+        try:
+
+            self.customer_entry_exit_time = self.env['customer.entry.exit'].create(
+                {
+                    'last_entry_time': None,
+                    'last_exit_time': None,
+                    'customer_id': self.customers[2].id,#Customer unsubscribed
+                }
+            )
+            self.customer_entry_exit_time.action_date_entry_to_gym()
+            last_entry_time = self.customer_entry_exit_time.last_entry_time
+
+            return False
+        
+        except:
+            print("The customer isn't registered, so you can't register an entry time")
+            print("\n")
+            return True
+
+
+    def test_p_17_register_entry_time_on_an_subscribed_customer(self):
+        print("SEVENTEENTH TEST")
+        print("\n")
+
+        self.customers[1].action_register()
+        try:
+
+            self.customer_entry_exit_time = self.env['customer.entry.exit'].create(
+                {   
+                    'last_entry_time': None,
+                    'last_exit_time': None,
+                    'customer_id': self.customers[1].id,#Customer subscribed
+                }
+            )
+
+            self.customer_entry_exit_time.action_date_entry_to_gym()
+            print("Last entry time: " + str(self.customer_entry_exit_time.last_entry_time))
+            print("\n")
+
+            return True
+        
+        except:
+            print("The customer isn't registered, so you can't register an entry time")
+            print("\n")
+            return False
+
+    def test_p_18_register_two_entry_time_on_an_subscribed_customer(self):
+        print("EIGHTEENTH TEST")
+        print("\n")
+
+        self.customers[1].action_register()
+        try:
+
+            self.customer_entry_exit_time = self.env['customer.entry.exit'].create(
+                {   
+                    'last_entry_time': None,
+                    'last_exit_time': None,
+                    'customer_id': self.customers[1].id,#Customer subscribed
+                }
+            )
+
+            self.customer_entry_exit_time.action_date_entry_to_gym()
+
+            self.customer_entry_exit_time.action_date_entry_to_gym()
+
+
+            print("Last entry time: " + str(self.customer_entry_exit_time.last_entry_time))
+            print("\n")
+
+            return False
+        
+        except:
+            print("There is already an entry time")
+            print("\n")
+            return True
+            
+
+    def test_p_19_register_exit_time_on_an_unsubscribed_customer(self):
+        print("NINETEENTH TEST")
+        print("\n")
+
+        try:
+
+            self.customer_entry_exit_time = self.env['customer.entry.exit'].create(
+                {
+                    'last_entry_time': None,
+                    'last_exit_time': None,
+                    'customer_id': self.customers[2].id,#Customer unsubscribed
+                }
+            )
+            self.customer_entry_exit_time.action_date_exit_to_gym()
+            last_entry_time = self.customer_entry_exit_time.last_entry_time
+
+            return False
+        
+        except:
+            print("The customer isn't registered, so you can't register an exit time")
+            print("\n")
+            return True
+
+
+    def test_p_20_register_exit_time_on_an_subscribed_customer(self):
+        print("TWENTIETH TEST")
+        print("\n")
+
+        self.customers[1].action_register()
+        try:
+
+            self.customer_entry_exit_time = self.env['customer.entry.exit'].create(
+                {   
+                    'last_entry_time': None,
+                    'last_exit_time': None,
+                    'customer_id': self.customers[1].id,#Customer subscribed
+                }
+            )
+
+            self.customer_entry_exit_time.action_date_entry_to_gym()
+
+            self.customer_entry_exit_time.action_date_exit_to_gym()
+
+            print("Last exit time: " + str(self.customer_entry_exit_time.last_exit_time))
+            print("\n")
+
+            return True
+        
+        except:
+            print("The customer isn't registered, so you can't register an exit time")
+            print("\n")
+            return False
+
+
+    def test_p_21_register_exit_time_before_entry_time_on_an_subscribed_customer(self):
+        print("TWENTY FIRST TEST")
+        print("\n")
+
+        self.customers[1].action_register()
+        try:
+
+            self.customer_entry_exit_time = self.env['customer.entry.exit'].create(
+                {   
+                    'last_entry_time': None,
+                    'last_exit_time': None,
+                    'customer_id': self.customers[1].id,#Customer subscribed
+                }
+            )
+
+            self.customer_entry_exit_time.action_date_exit_to_gym()
+
+
+            print("Last exit time: " + str(self.customer_entry_exit_time.last_exit_time))
+            print("\n")
+
+            return False
+        
+        except:
+            print("There is already an exit time")
+            print("\n")
+            return True
+    
+
+    def test_p_22_register_two_exit_time_on_an_subscribed_customer(self):
+        print("TWENTY SECOND TEST")
+        print("\n")
+
+        self.customers[1].action_register()
+        try:
+
+            self.customer_entry_exit_time = self.env['customer.entry.exit'].create(
+                {   
+                    'last_entry_time': None,
+                    'last_exit_time': None,
+                    'customer_id': self.customers[1].id,#Customer subscribed
+                }
+            )
+
+            self.customer_entry_exit_time.action_date_entry_to_gym()
+
+            self.customer_entry_exit_time.action_date_entry_to_gym()
+
+
+            print("Last entry time: " + str(self.customer_entry_exit_time.last_entry_time))
+            print("\n")
+
+            return False
+        
+        except:
+            print("There isn't any entry time, you can't create an exit time")
+            print("\n")
+            return True
+
+
 
     #TESTS FOR THE MONTHLY REVIEW FUNCTIONALITY -----------------------------------------------------------------------
 
-    def test_p_16_correct_monthly_review(self):
-        print("SIXTEENTH TEST")
+    def test_p_23_correct_monthly_review(self):
+        print("TWENTY THIRD TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
         print("BEFORE: Number of reviews: " + str(len(self.customers[0].monthly_review_ids)))
@@ -558,8 +756,8 @@ class CustomerTestCase(TransactionCase):
         return var
 
 
-    def test_p_17_wrong_monthly_review_same_date(self):
-        print("SEVENTEENTH TEST")
+    def test_p_24_wrong_monthly_review_same_date(self):
+        print("TWENTY FOURTH TEST")
         print("\n")
 
         self.review = self.env['monthly.review']
@@ -609,8 +807,8 @@ class CustomerTestCase(TransactionCase):
             var = self.assertEqual(1, len(self.customers[0].monthly_review_ids))
             return var
         
-    def test_p_18_wrong_monthly_review_in_the_same_month(self):
-        print("EIGHTEENTH TEST")
+    def test_p_25_wrong_monthly_review_in_the_same_month(self):
+        print("TWENTY FIFTH TEST")
         print("\n")
 
         self.review = self.env['monthly.review']
@@ -661,8 +859,8 @@ class CustomerTestCase(TransactionCase):
             return var
 
 
-    def test_p_19_two_monthly_reviews_correct(self):
-        print("NINETEENTH TEST")
+    def test_p_26_two_monthly_reviews_correct(self):
+        print("TWENTY SIXTH TEST")
         print("\n")
 
         print("BEFORE: Number of reviews: " + str(len(self.customers[0].monthly_review_ids)))
@@ -716,8 +914,8 @@ class CustomerTestCase(TransactionCase):
     #TESTS FOR TRAINING FUNCTIONALITY -----------------------------------------------------------------------
 
 
-    def test_p_20_personal_training(self):
-        print("TWENTYTH TEST")
+    def test_p_27_personal_training(self):
+        print("TWENTY SEVENTH TEST")
         print("\n")
 
         print("BEFORE: Number of trainings: " + str(len(self.customers[0].customer_training_ids)))
@@ -741,8 +939,8 @@ class CustomerTestCase(TransactionCase):
         return var
 
 
-    def test_p_21_two_personal_trainings(self):
-        print("TWENTY FIRST TEST")
+    def test_p_28_two_personal_trainings(self):
+        print("TWENTY EIGHTH TEST")
         print("\n")
 
         print("BEFORE: Number of trainings: " + str(len(self.customers[0].customer_training_ids)))
@@ -772,12 +970,14 @@ class CustomerTestCase(TransactionCase):
 
         var = self.assertEqual(2, len(self.customers[0].customer_training_ids))
         return var
+
+    
     
     #TEST FOR EDITING DATA ---------------------------------------------------------------------------------------------------------------
 
 
-    def test_p_22_edit_customer(self):
-        print("TWENTY SECOND TEST")
+    def test_p_29_edit_customer(self):
+        print("TWENTY NINETH TEST")
         print("\n")
         #Solo el segundo está dado de baja ([1]), por lo tanto, el primero ([0]) está dado de alta.
         print("BEFORE:")
@@ -810,9 +1010,9 @@ class CustomerTestCase(TransactionCase):
 
     #TEST FOR PAYMENT MORE THAN ONE MONTH AT THE SAME TIME -------------------------------------------------------------------------------------
 
-    def test_p_23_more_than_one_month_payment(self):
+    def test_p_30_more_than_one_month_payment(self):
         #There is an error because the wizard needs to know what customer we have and in a test case we can't make it
-        print("TWENTY THIRD TEST")
+        print("THERTIETH TEST")
         print("\n")
 
         self.customer_monthly_payment = self.env['customer.monthly.payment'].create(
@@ -830,8 +1030,8 @@ class CustomerTestCase(TransactionCase):
 
         return True
 
-    def test_p_24_more_than_one_month_payment_customer_not_registered(self):
-        print("TWENTY FOURTH TEST")
+    def test_p_31_more_than_one_month_payment_customer_not_registered(self):
+        print("THERTY FIRST TEST")
         print("\n")
 
         try:
@@ -851,4 +1051,3 @@ class CustomerTestCase(TransactionCase):
         except:
             print("The customer isn't registered, so you can't register a monthly payment")
             print("\n")
-
