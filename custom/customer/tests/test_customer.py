@@ -15,13 +15,54 @@ class CustomerTestCase(TransactionCase):
         print("SETUP FOR CUSTOMERS")
         print("\n")
 
+        cls.user_without_image_1 = cls.env['res.users'].create({
+            'name': 'Marc Demo',
+            'email': 'mark.brown23@example.com',
+            'image_1920': False,
+            'login': 'demo_1',
+            'password': 'demo_123'
+        })
+        cls.user_without_image_2 = cls.env['res.users'].create({
+            'name': 'Marc Demo 2',
+            'email': 'mark.brown232@example.com',
+            'image_1920': False,
+            'login': 'demo_2',
+            'password': 'demo_123'
+        })
+
+        cls.season_pass = cls.env['customer.season.pass'].create([{
+            'name': 'Student',
+            'until_age': 25,
+            'cost': 25.99
+        },
+        {
+            'name': 'Normal',
+            'until_age': 60,
+            'cost': 30.99
+        }])
+
         # create the data for each tests. By doing it in the setUpClass instead
         # of in a setUp or in each test case, we reduce the testing time and
         # the duplication of code.
 
         today = datetime.date.today()
         student_date = today - relativedelta(years=19)
-        normal_date = today - relativedelta(years=23)
+        normal_date = today - relativedelta(years=30)
+
+        cls.user_without_image_3 = cls.env['res.users'].create({
+            'name': 'Marc Demo',
+            'email': 'mark.brown233@example.com',
+            'image_1920': False,
+            'login': 'demo_3',
+            'password': 'demo_123'
+        })
+        cls.user_without_image_4 = cls.env['res.users'].create({
+            'name': 'Marc Demo',
+            'email': 'mark.brown234@example.com',
+            'image_1920': False,
+            'login': 'demo_4',
+            'password': 'demo_123'
+        })
 
         cls.customers = cls.env['customer.customer'].create([
             {
@@ -34,7 +75,9 @@ class CustomerTestCase(TransactionCase):
                 'actual_height': 1.80,
                 'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                 'ways_to_pay': "transfer",
-                'goal': "I want to gain muscle mass"
+                'goal': "I want to gain muscle mass",
+                'user_id': cls.user_without_image_3.id,
+                'customer_season_pass_id': cls.season_pass[1].id
             },
             {
                 'have_dni': True, 
@@ -48,7 +91,9 @@ class CustomerTestCase(TransactionCase):
                 'ways_to_pay': "in_hand",
                 'goal': "I want to gain muscle mass",
                 'registered': False,
-                'unsubscribe_date': today - relativedelta(months=2)
+                'unsubscribe_date': today - relativedelta(months=2),
+                'user_id': cls.user_without_image_4.id,
+                'customer_season_pass_id': cls.season_pass[0].id
             }
         ])
 
@@ -68,7 +113,7 @@ class CustomerTestCase(TransactionCase):
         print("FIRST TEST")
         today = datetime.date.today()
         student_date = today - relativedelta(years=19)
-        normal_date = today - relativedelta(years=23)
+        normal_date = today - relativedelta(years=30)
 
         self.customers = self.env['customer.customer'].create([
             {
@@ -81,7 +126,9 @@ class CustomerTestCase(TransactionCase):
                 'actual_height': 1.80,
                 'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                 'ways_to_pay': "transfer",
-                'goal': "I want to gain muscle mass"
+                'goal': "I want to gain muscle mass",
+                'user_id': self.user_without_image_1.id,
+                'customer_season_pass_id': self.season_pass[1].id
             },
             {
                 'have_dni': True, 
@@ -93,22 +140,24 @@ class CustomerTestCase(TransactionCase):
                 'actual_height': 1.80,
                 'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                 'ways_to_pay': "in_hand",
-                'goal': "I want to gain muscle mass"
+                'goal': "I want to gain muscle mass",
+                'user_id': self.user_without_image_2.id,
+                'customer_season_pass_id': self.season_pass[0].id
             }
         ])
 
         print("¿Registered? " + str(self.customers[0].registered))
         print("Full name: " + str(self.customers[0].name) + " " + str(self.customers[0].surnames))
         print("Age: " + str(self.customers[0].age))
-        print("Season pass: " + str(self.customers[0].season_pass))
-        print("Season pass cost: " + str(self.customers[0].season_pass_cost))
+        print("Season pass: " + str(self.customers[0].customer_season_pass_id.name))
+        print("Season pass cost: " + str(self.customers[0].customer_season_pass_id.cost))
         print("\n")
 
         print("¿Registered? " + str(self.customers[1].registered))
         print("Full name: " + str(self.customers[1].name) + " " + str(self.customers[1].surnames))
         print("Age: " + str(self.customers[1].age))
-        print("Season pass: " + str(self.customers[1].season_pass))
-        print("Season pass cost: " + str(self.customers[1].season_pass_cost))
+        print("Season pass: " + str(self.customers[1].customer_season_pass_id.name))
+        print("Season pass cost: " + str(self.customers[1].customer_season_pass_id.cost))
         print("\n")
 
         var = self.assertEqual(self.customers[0].registered, True)
@@ -135,7 +184,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
                 }])
         except:
             print("The name contains capital letters and it can't create the customer")
@@ -164,7 +215,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
                 }])
         except:
             print("The name contains a number and it can't create the customer")
@@ -193,7 +246,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
                 }])
         except:
             print("The surnames contains capital letters and it can't create the customer")
@@ -222,7 +277,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
                 }])
         except:
             print("The surnames contains a number letters and it can't create the customer")
@@ -252,7 +309,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
                 }])
             return var
         except:
@@ -280,7 +339,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
                 }])
         except:
             print("The weight can't be negative and it can't create the customer")
@@ -309,7 +370,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': -1.80,#falla aqui
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
                 }])
         except:
             print("The height can't be negative and it can't create the customer")
@@ -338,7 +401,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
                 }])
         except:
             print("The birth date can't be in the future and it can't create the customer")
@@ -354,7 +419,7 @@ class CustomerTestCase(TransactionCase):
         print("TENTH TEST")
         today = datetime.date.today()
         student_date = today - relativedelta(years=19)
-        normal_date = today - relativedelta(years=23)
+        normal_date = today - relativedelta(years=30)
 
         try:
             self.customers = self.env['customer.customer'].create([
@@ -368,7 +433,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
                 },
                 {
                     'have_dni': True, 
@@ -380,7 +447,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "in_hand",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_2.id,
+                    'customer_season_pass_id': self.season_pass[0].id
                 }
             ])
         except:
@@ -397,7 +466,7 @@ class CustomerTestCase(TransactionCase):
         print("ELEVENTH TEST")
         today = datetime.date.today()
         student_date = today - relativedelta(years=19)
-        normal_date = today - relativedelta(years=23)
+        normal_date = today - relativedelta(years=30)
 
         try:
             self.customers = self.env['customer.customer'].create([
@@ -411,7 +480,10 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "transfer",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[1].id
+
                 },
                 {
                     'have_dni': False, 
@@ -423,7 +495,9 @@ class CustomerTestCase(TransactionCase):
                     'actual_height': 1.80,
                     'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
                     'ways_to_pay': "in_hand",
-                    'goal': "I want to gain muscle mass"
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_2.id,
+                    'customer_season_pass_id': self.season_pass[0].id
                 }
             ])
         except:
@@ -1051,3 +1125,104 @@ class CustomerTestCase(TransactionCase):
         except:
             print("The customer isn't registered, so you can't register a monthly payment")
             print("\n")
+
+
+    #TEST FOR NEW SEASON PASS -------------------------------------------------------------------------------------
+
+    #edad por debajo
+    def test_p_32_correct_customer_with_season_pass_under_age(self):
+        print("\n")
+        print("THERTY SECOND TEST")
+        today = datetime.date.today()
+        student_date = today - relativedelta(years=19)
+
+        self.customers = self.env['customer.customer'].create({
+                'have_dni': True, 
+                'dni': "72727272Z",
+                'name': "Pepe",
+                'surnames': "Ejemplo Ejemplo",
+                'birth_date': student_date,
+                'actual_weight': 70.0,
+                'actual_height': 1.80,
+                'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                'ways_to_pay': "transfer",
+                'goal': "I want to gain muscle mass",
+                'user_id': self.user_without_image_1.id,
+                'customer_season_pass_id': self.season_pass[0].id
+            })
+
+        print("Season pass: " + str(self.customers[0].customer_season_pass_id.name))
+        print("Season pass cost: " + str(self.customers[0].customer_season_pass_id.cost))
+        print("\n")
+
+        result = self.assertEqual(self.customers.customer_season_pass_id.name, 'Student')
+        return result
+
+
+    #edad por encima (salta la excepcion)
+    def test_p_33_incorrect_customer_with_season_pass(self):
+        print("\n")
+        print("THERTY THIRD TEST")
+        today = datetime.date.today()
+        wrong_date = today - relativedelta(years=26)
+
+        try:
+            self.customers = self.env['customer.customer'].create({
+                    'have_dni': True, 
+                    'dni': "72727272Z",
+                    'name': "Pepe",
+                    'surnames': "Ejemplo Ejemplo",
+                    'birth_date': wrong_date,
+                    'actual_weight': 70.0,
+                    'actual_height': 1.80,
+                    'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                    'ways_to_pay': "transfer",
+                    'goal': "I want to gain muscle mass",
+                    'user_id': self.user_without_image_1.id,
+                    'customer_season_pass_id': self.season_pass[0].id
+                })
+
+            print("Season pass: " + str(self.customers[0].customer_season_pass_id.name))
+            print("Season pass cost: " + str(self.customers[0].customer_season_pass_id.cost))
+            print("\n")
+
+            result = self.assertEqual(self.customers.customer_season_pass_id.name, 'Student')
+            return result
+
+        except:
+            print("The customer age is older than the age to use that season pass")
+            print("\n")
+            return True
+
+
+    #edad igual
+    def test_p_34_correct_customer_with_season_pass_same_age(self):
+        print("\n")
+        print("THERTY FOURTH TEST")
+        today = datetime.date.today()
+        student_date = today - relativedelta(years=25) - relativedelta(days=1)
+
+        self.customers = self.env['customer.customer'].create({
+                'have_dni': True, 
+                'dni': "72727272Z",
+                'name': "Pepe",
+                'surnames': "Ejemplo Ejemplo",
+                'birth_date': student_date,
+                'actual_weight': 70.0,
+                'actual_height': 1.80,
+                'address': "C/ Niña de la Alfalfa 3, Esc 33, 3º B",
+                'ways_to_pay': "transfer",
+                'goal': "I want to gain muscle mass",
+                'user_id': self.user_without_image_1.id,
+                'customer_season_pass_id': self.season_pass[0].id
+            })
+            
+        print("Season pass: " + str(self.customers.customer_season_pass_id.name))
+        print("Season pass cost: " + str(self.customers.customer_season_pass_id.cost))
+        print("\n")
+
+        result = self.assertEqual(self.customers.customer_season_pass_id.name, 'Student')
+
+        return result
+    
+

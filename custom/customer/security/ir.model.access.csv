@@ -5,3 +5,4 @@ access_customer_training,access_customer_training,model_customer_training,base.g
 access_training_machine,access_training_machine,model_training_machine,base.group_user,1,1,1,1
 access_customer_monthly_payment,access_customer_monthly_payment,model_customer_monthly_payment,base.group_user,1,1,1,1
 customer.access_customer_entry_exit,access_customer_entry_exit,customer.model_customer_entry_exit,base.group_user,1,1,1,1
+customer.access_customer_season_pass,access_customer_season_pass,customer.model_customer_season_pass,base.group_user,1,1,1,1

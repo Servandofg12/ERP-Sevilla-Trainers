@@ -38,21 +38,24 @@ class Customer(models.Model):
     
 
     #Relations between tables----------------------------------------------------------------------------------------------------------
-    user_id = fields.Many2one('res.users', 'User', index=True, store=True, readonly=False)
+    user_id = fields.Many2one('res.users', 'User', index=True, store=True, readonly=False, required=True)
     monthly_review_ids = fields.One2many("monthly.review", "customer_id", string="Monthly review")
     customer_training_ids = fields.One2many("customer.training", "customer_id", string="Trainings")
     customer_entry_exit_ids = fields.One2many("customer.entry.exit", "customer_id", string="Entry/Exit timer")
-    #account_move_ids = fields.One2many("account.move", "customer_id")
+
+    customer_season_pass_id = fields.Many2one('customer.season.pass', string="Season Pass", index=True, store=True, readonly=False, required=True)
+    display_until_age = fields.Integer(related='customer_season_pass_id.until_age', store=True)
+    display_cost = fields.Float(related='customer_season_pass_id.cost', store=True)
 
     #Computed fields----------------------------------------------------------------------------------------------------------------------
     age = fields.Integer(compute="_compute_age")
-    season_pass = fields.Selection(
+    '''season_pass = fields.Selection(
         string = 'Type of season pass',
         selection=[('student', 'Student'), ('normal','Normal'), ('old_age','Old Age'), ('none','None')],
         compute = "_compute_season_pass_depending_on_age",
         store=True
     )
-    season_pass_cost = fields.Float(compute="_compute_season_pass_cost")
+    season_pass_cost = fields.Float(compute="_compute_season_pass_cost")'''
 
 
     #Constraints---------------------------------------------------------------------------------------------------------------------------
@@ -62,7 +65,6 @@ class Customer(models.Model):
         ('user_uniq', 'unique (user_id)', "This user is from other person. Please write or try another one."),
         ('dni_uniq', 'unique (dni)', "This DNI is from another person."),
         ('nie_uniq', 'unique (nie)', "This NIE is from another person."),
-        #('unique_email', 'unique (email)', 'This email already exists.'),
     ]
 
 
@@ -132,6 +134,15 @@ class Customer(models.Model):
                     raise ValidationError("This user is from other person. Please write or try another one.")
 
 
+    @api.constrains("birth_date", "customer_season_pass_id")
+    def _check_age_of_season_pass_with_customer_age(self):
+        for record in self:
+            age = record.age
+            until_age_season_pass = record.customer_season_pass_id.until_age
+            if age > until_age_season_pass:
+                raise ValidationError("The age of the customer is older than the season pass, please choose another season pass.")
+
+
 
     #Computed fields functions-------------------------------------------------------------------------------------------------------------
     @api.depends("birth_date", "age")
@@ -167,7 +178,7 @@ class Customer(models.Model):
 
 
 
-    @api.depends("age")
+    '''@api.depends("age")
     def _compute_season_pass_depending_on_age(self):
         for record in self:
             age = record.age
@@ -183,11 +194,11 @@ class Customer(models.Model):
                     record.season_pass = "old_age"
 
             else:
-                record.season_pass = "none"
+                record.season_pass = "none"'''
 
 
 
-    @api.depends("season_pass", "ways_to_pay")
+    '''@api.depends("season_pass", "ways_to_pay")
     def _compute_season_pass_cost(self):
         for record in self:
             season_pass = record.season_pass
@@ -218,7 +229,7 @@ class Customer(models.Model):
                     record.season_pass_cost = 0.0
             
             else:
-                record.season_pass_cost = 0.0
+                record.season_pass_cost = 0.0'''
 
 
     #Actions-------------------------------------------------------------------------------------------------------------
@@ -254,7 +265,7 @@ class Customer(models.Model):
 
                 account_move = self.env["account.move"].create(
                     {
-                        "name": "Monthly payment of customer " + str(record.name) + " " + str(len(record.account_move_ids)+1),
+                        "name": "Monthly payment of customer " + str(record.user_id.name) + " " + str(len(record.account_move_ids)+1),
                         "partner_id": partner,
                         "move_type": "out_invoice",
                         "journal_id": journal.id,
@@ -264,7 +275,7 @@ class Customer(models.Model):
                                 {
                                     "name": record.name,
                                     "quantity": 1.0,
-                                    "price_unit": record.season_pass_cost,
+                                    "price_unit": record.customer_season_pass_id.cost,
                                 })
                     }
                 )

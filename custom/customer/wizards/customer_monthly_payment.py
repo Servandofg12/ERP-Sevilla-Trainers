@@ -45,7 +45,7 @@ class CustomerMonthlyPayment(models.TransientModel):
                                 {
                                     "name": record.customer_id.name,
                                     "quantity": record.amount_months,
-                                    "price_unit": record.customer_id.season_pass_cost,
+                                    "price_unit": record.customer_id.customer_season_pass_id.cost,
                                 })
                     }
                 )

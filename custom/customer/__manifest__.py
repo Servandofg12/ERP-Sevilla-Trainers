@@ -17,6 +17,7 @@
         'views/training_machine_views.xml',
         'views/customer_training_views.xml',
         'views/customer_entry_exit_views.xml',
+        'views/customer_season_pass_views.xml',
         'views/customer_menu.xml'
         
         ],

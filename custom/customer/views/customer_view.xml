@@ -12,7 +12,7 @@
           <field name="birth_date" string="Birth Date"/>
           <field name="actual_weight"></field>
           <field name="actual_height"></field>
-          <field name="season_pass" string="Season pass"></field>
+          <!--<field name="season_pass" string="Season pass"></field>-->
         </tree>
       </field>
     </record>
@@ -45,7 +45,7 @@
                         </group>
                         <group>
                             <field name="age" string="Age"/>
-                            <field name="season_pass_cost" string="Season pass cost"/>
+                            <!--<field name="season_pass_cost" string="Season pass cost"/>-->
                             <field name="payday" string="Next payday"/>
                             <field name="registered" invisible="True"/>
                         </group>
@@ -80,9 +80,16 @@
                             </page3>
                             <page4 string="Way to pay and Season pass">
                               <group>
-                                <field name="ways_to_pay" string="Way to pay"/>
-                                <field name="birth_date" string="Birth date"/>
-                                <field name="season_pass" string="Season pass"/>
+                                <group>
+                                  <field name="ways_to_pay" string="Way to pay"/>
+                                  <field name="birth_date" string="Birth date"/>
+                                  <field name="customer_season_pass_id" string="Season pass" widget='selection'/>
+                                  <!--<field name="season_pass" string="Season pass"/>-->
+                                </group>
+                                <group>
+                                  <field name="display_until_age" string="Season pass until age"/>
+                                  <field name="display_cost" string="Season pass cost"/>
+                                </group>
                               </group>
                             </page4>
                             <page5 string="Monthly Review" attrs="{'invisible':[('registered', '==', False)]}">
@@ -95,7 +102,7 @@
                                 <field name="customer_training_ids" widget="one2many_list"/>
                               </group>
                             </page6>
-                            <page7 string="Entry/Exit Timer" attrs="{'invisible':[('registered', '==', False)]}">
+                            <page7 string="Entry/Exit Timer" attrs="{'invisible':[('registered', '==', False), ('id','==', False)]}">
                               <group>
                                 <field name="customer_entry_exit_ids" widget="one2many_list"/>
                               </group>
@@ -119,7 +126,7 @@
                     <filter string="Unsubscribed" name="registered" domain="[('registered', '=', False)]"/>
                     
                     <group expand="1" string="Group By">
-                        <filter string="Season Pass" name="season_pass" context="{'group_by':'season_pass'}"/>
+                        <filter string="Season Pass" name="season_pass" context="{'group_by':'customer_season_pass_id'}"/>
                     </group>
                 </search>
             </field>
@@ -131,7 +138,7 @@
   <field name="name">customer.customer.kanban</field>
   <field name="model">customer.customer</field>
   <field name="arch" type="xml">
-    <kanban default_group_by="season_pass" records_draggable="0">
+    <kanban records_draggable="0" default_group_by="customer_season_pass_id">
       <field name="registered"/><!-- Es necesario para los t-if-->
       <field name="image_1920"/>
       <templates>
@@ -151,7 +158,7 @@
                     </strong>
                   </div>
                   <div>
-                    Season pass: <field name="season_pass"/>
+                    <!--Season pass: <field name="season_pass"/>-->
                   </div>
                   <div class="float-right" t-if="record.registered.raw_value">
                     Registered in: <field name="register_date"/>

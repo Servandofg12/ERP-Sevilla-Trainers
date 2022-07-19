@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+  <odoo>
+
+    <!-- Para la vista de Listado o Tree-->
+    <record id="customer_season_pass_view_tree" model="ir.ui.view">
+      <field name="name">customer.season.pass.tree</field>
+      <field name="model">customer.season.pass</field>
+      <field name="arch" type="xml">
+        <tree string="Season Pass"> 
+          <field name="name" string="Name"></field>
+          <field name="until_age" string="Valid until age"></field>
+          <field name="cost" string="Cost"></field>
+        </tree>
+      </field>
+    </record>
+
+
+    <!-- Para la vista de formulario Form-->
+    <record id="customer_season_pass_view_form" model="ir.ui.view">
+        <field name="name">customer.season.pass.form</field>
+        <field name="model">customer.season.pass</field>
+        <field name="arch" type="xml">
+            <form string="Property">
+                <sheet>
+                    <group>
+                        <h2>Name: <field name="name"/></h2>
+                    </group>
+                    <group>
+                        <field name="until_age" string="Valid until age"/>
+                        <field name="cost" string="Cost"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Para que aparezca el boton en el menu-->
+    <record id="customer_season_pass_action" model="ir.actions.act_window"><!-- el id que pongamos aqui servirá para llamarlo en el estate_menus-->
+      <field name="name">Season Pass</field>
+      <field name="res_model">customer.season.pass</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+  </odoo>
