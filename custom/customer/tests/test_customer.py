@@ -1129,7 +1129,6 @@ class CustomerTestCase(TransactionCase):
 
     #TEST FOR NEW SEASON PASS -------------------------------------------------------------------------------------
 
-    #edad por debajo
     def test_p_32_correct_customer_with_season_pass_under_age(self):
         print("\n")
         print("THERTY SECOND TEST")
@@ -1159,7 +1158,6 @@ class CustomerTestCase(TransactionCase):
         return result
 
 
-    #edad por encima (salta la excepcion)
     def test_p_33_incorrect_customer_with_season_pass(self):
         print("\n")
         print("THERTY THIRD TEST")
@@ -1195,7 +1193,6 @@ class CustomerTestCase(TransactionCase):
             return True
 
 
-    #edad igual
     def test_p_34_correct_customer_with_season_pass_same_age(self):
         print("\n")
         print("THERTY FOURTH TEST")

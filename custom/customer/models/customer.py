@@ -293,6 +293,46 @@ class Customer(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_view_account_move_reversal")
         return action
 
+
+    #On create ---------------------------------------------------------------------------------------------------------------------------
+    @api.model
+    def create(self, vals):
+
+        #Create the customer
+        result = super(Customer, self).create(vals)
+
+        user_id = self.env["res.users"].browse(vals["user_id"])
+        customer_season_pass_id = self.env["customer.season.pass"].browse(vals["customer_season_pass_id"])
+
+        journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
+        partner = self.env["res.partner"].search([("name", "=", user_id.name)], limit=1)
+
+        if(vals["registered"]):
+            next_payday = datetime.date.today() + relativedelta(months=1)
+            vals["payday"] = next_payday
+
+            account_move = self.env["account.move"].create(
+                {
+                    "name": "Monthly payment of customer " + str(user_id.name) + " " + str(1),
+                    "partner_id": partner,
+                    "move_type": "out_invoice",
+                    "journal_id": journal.id,
+                    "customer_id": result.id,
+                    "invoice_line_ids": 
+                        Command.create(
+                            {
+                                "name": vals["name"],
+                                "quantity": 1.0,
+                                "price_unit": customer_season_pass_id.cost,
+                            })
+                }
+            )
+                
+            account_move.action_post()#to post it
+            account_move.action_register_payment()#to make it paid
+
+        return result
+
     
     
 
